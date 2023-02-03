@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { Input } from "../components/input";
 import { Label } from "../components/label";
@@ -7,7 +7,14 @@ import { IconEyeClose, IconEyeOpen } from "../components/icon";
 import { Field } from "../components/field";
 import { useState } from "react";
 import { Button } from "../components/button";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Loading } from "../components/loading";
+import { toast } from "react-toastify";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth, db } from "../firebase-data/firebase-config";
+import { useNavigate } from "react-router-dom";
+import { addDoc, collection } from "firebase/firestore";
 
 const SignUpPageStyles = styled.div`
   min-height: 100vh;
@@ -17,9 +24,16 @@ const SignUpPageStyles = styled.div`
   }
   .heading {
     text-align: center;
-    color: ${(props) => props.theme.primary};
+    color: transparent;
+    background-image: linear-gradient(
+      to right bottom,
+      ${(props) => props.theme.greenLight},
+      ${(props) => props.theme.blueLight}
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
     font-weight: bold;
-    font-size: 40px;
+    font-size: 46px;
     margin-bottom: 60px;
   }
   .form {
@@ -28,7 +42,20 @@ const SignUpPageStyles = styled.div`
   }
 `;
 
+const schema = yup.object({
+  fullname: yup.string().required("Please enter your fullname"),
+  email: yup
+    .string()
+    .email("Please enter valid email address")
+    .required("Please enter your email address"),
+  password: yup
+    .string()
+    .min(8, "Your password must be at least 8 characters or greater")
+    .required("Please enter your password"),
+});
+
 const SignUpPage = () => {
+  const navigate = useNavigate();
   const {
     control,
     handleSubmit,
@@ -37,21 +64,43 @@ const SignUpPage = () => {
     reset,
   } = useForm({
     mode: "onChange",
+    resolver: yupResolver(schema),
   });
-  const handleSignUp = (values) => {
+  const handleSignUp = async (values) => {
+    // value ở đây là fullname, email, password
     if (!isValid) return;
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 3000);
+    const user = await createUserWithEmailAndPassword(
+      auth,
+      values.email,
+      values.password
+    );
+    await updateProfile(auth.currentUser, {
+      displayName: values.fullname,
     });
+    const colRef = collection(db, "users");
+    addDoc(colRef, {
+      fullname: values.fullname,
+      email: values.email,
+      password: values.password,
+    });
+    toast.success("Register successfully!");
+    navigate("/");
   };
   const [togglePassword, setTogglePassword] = useState(false);
+  useEffect(() => {
+    const arrError = Object.values(errors);
+    if (arrError.length > 0) {
+      toast.error(arrError[0]?.message, {
+        pauseOnHover: false,
+      });
+    }
+  }, [errors]);
   return (
     <SignUpPageStyles>
       <div className="container">
-        <img srcSet="/logo.png 2x" alt="your-blog" className="logo" />
-        <h1 className="heading">Your Blogging</h1>
+        <img srcSet="/logo2.png 2x" alt="your-blog" className="logo" />
+        <h1 className="heading">Your Blogger</h1>
+        {/* <h2 className="sologan">Đăng nội dung thể hiện niềm đam mê của bạn</h2> */}
         <form
           className="form"
           onSubmit={handleSubmit(handleSignUp)}

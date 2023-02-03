@@ -17,8 +17,8 @@ const ButtonStyles = styled.button`
   align-items: center;
   background-image: linear-gradient(
     to right bottom,
-    ${(props) => props.theme.primary},
-    ${(props) => props.theme.secondary}
+    ${(props) => props.theme.greenLight},
+    ${(props) => props.theme.blueLight}
   );
   &:disabled {
     opacity: 0.5;

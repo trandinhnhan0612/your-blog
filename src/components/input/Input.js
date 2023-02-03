@@ -16,7 +16,7 @@ const InputStyles = styled.div`
   }
   input:focus {
     background-color: white;
-    border-color: ${(props) => props.theme.primary};
+    border-color: ${(props) => props.theme.focusColor};
   }
   input::-webkit-input-placeholder {
     color: #84878b;
