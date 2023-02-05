@@ -13,8 +13,8 @@ const AuthPageStyles = styled.div`
     color: transparent;
     background-image: linear-gradient(
       to right bottom,
-      ${(props) => props.theme.greenLight},
-      ${(props) => props.theme.blueLight}
+      ${(props) => props.theme.primary},
+      ${(props) => props.theme.secondary}
     );
     -webkit-background-clip: text;
     background-clip: text;

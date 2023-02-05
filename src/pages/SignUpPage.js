@@ -126,6 +126,7 @@ const SignUpPage = () => {
         <Button
           type="submit"
           style={{
+            width: "100%",
             maxWidth: 300,
             margin: "0 auto",
           }}
