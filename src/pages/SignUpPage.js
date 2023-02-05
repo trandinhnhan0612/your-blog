@@ -13,9 +13,10 @@ import { Loading } from "../components/loading";
 import { toast } from "react-toastify";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "../firebase-data/firebase-config";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { addDoc, collection } from "firebase/firestore";
 import AuthPage from "./AuthPage";
+import SignInPage from "./SignInPage";
 
 const schema = yup.object({
   fullname: yup.string().required("Please enter your fullname"),
@@ -67,9 +68,13 @@ const SignUpPage = () => {
     if (arrError.length > 0) {
       toast.error(arrError[0]?.message, {
         pauseOnHover: false,
+        delay: 0,
       });
     }
   }, [errors]);
+  useEffect(() => {
+    document.title = "Sign up Page";
+  });
   return (
     <AuthPage>
       {/* <h2 className="sologan">Đăng nội dung thể hiện niềm đam mê của bạn</h2> */}
@@ -115,6 +120,9 @@ const SignUpPage = () => {
             )}
           </Input>
         </Field>
+        <div className="have-account">
+          You already have an account? <NavLink to={"/sign-in"}>Login</NavLink>
+        </div>
         <Button
           type="submit"
           style={{

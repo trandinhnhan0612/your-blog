@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Loading } from "../loading";
 import PropTypes from "prop-types";
+import { NavLink } from "react-router-dom";
 
 const ButtonStyles = styled.button`
   cursor: pointer;
@@ -12,7 +13,6 @@ const ButtonStyles = styled.button`
   font-size: 18px;
   height: ${(props) => props.height || "66px"};
   font-weight: 600;
-  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -37,8 +37,17 @@ const Button = ({
   children,
   ...props
 }) => {
-  const { isLoading } = props;
+  const { isLoading, to } = props;
   const child = !!isLoading ? <Loading></Loading> : children; // 2 dấu !! covert thành boolean
+  if (to !== "" && typeof to === "string") {
+    return (
+      <NavLink to={to}>
+        <ButtonStyles type={type} {...props}>
+          {child}
+        </ButtonStyles>
+      </NavLink>
+    );
+  }
   return (
     <ButtonStyles type={type} onClick={onClick} {...props}>
       {child}

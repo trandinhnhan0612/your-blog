@@ -6,4 +6,5 @@ export const theme = {
   greenLight: "#30CFD0",
   blueLight: "#330867 ",
   focusColor: "#0466C8",
+  notFound: "#A2D2FF",
 };
