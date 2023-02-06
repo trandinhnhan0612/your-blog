@@ -10,6 +10,7 @@ const HomeBannerStyles = styled.div`
     ${(props) => props.theme.banner1},
     ${(props) => props.theme.banner2}
   );
+  margin-bottom: 50px;
   .banner {
     display: flex;
     align-items: center;

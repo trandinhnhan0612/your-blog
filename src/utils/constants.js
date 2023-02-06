@@ -9,4 +9,6 @@ export const theme = {
   notFound: "#A2D2FF",
   banner1: "#08AEEA",
   banner2: "#2AF598",
+  tertiary: "#3A1097",
+  accent: "#00D1ED",
 };
