@@ -1,5 +1,9 @@
 import React from "react";
 import styled from "styled-components";
+import PostCategory from "./PostCategory";
+import PostImage from "./PostImage";
+import PostMeta from "./PostMeta";
+import PostTitle from "./PostTitle";
 
 const PostNewItemStyles = styled.div`
   display: flex;
@@ -19,45 +23,13 @@ const PostNewItemStyles = styled.div`
       flex-shrink: 0;
       width: 180px;
       height: 130px;
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 12px;
-      }
+      border-radius: 12px;
     }
     &-category {
-      display: inline-block;
-      padding: 8px;
-      border-radius: 8px;
-      color: #6b6bb6;
-      font-size: 12px;
-      font-weight: 600;
-      background-color: white;
       margin-bottom: 8px;
     }
     &-title {
-      font-weight: bold;
-      line-height: 1.5;
-      display: block;
-      font-size: 16px;
       margin-bottom: 8px;
-    }
-    &-info {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 14px;
-      font-weight: 600;
-      margin-left: auto;
-      color: #6b6b6b;
-    }
-    &-dot {
-      display: inline-block;
-      width: 4px;
-      height: 4px;
-      background-color: currentColor;
-      border-radius: 100rem;
     }
   }
 `;
@@ -65,20 +37,20 @@ const PostNewItemStyles = styled.div`
 const PostNewestItem = () => {
   return (
     <PostNewItemStyles>
-      <div className="post-image">
-        <img
-          src="https://images.unsplash.com/photo-1510519138101-570d1dca3d66?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2294&q=80"
-          alt=""
-        />
-      </div>
+      <PostImage
+        url="https://images.unsplash.com/photo-1510519138101-570d1dca3d66?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2294&q=80"
+        alt=""
+        className="post-image"
+        to="/"
+      ></PostImage>
       <div className="post-content">
-        <span className="post-category">Kiến Thức</span>
-        <h3 className="post-title">Hướng dẫn setup phòng cho người mới</h3>
-        <div className="post-info">
-          <span className="post-time">March 3</span>
-          <span className="post-dot"></span>
-          <span className="post-author">Như ý</span>
-        </div>
+        <PostCategory className="post-category" type="secondary">
+          Kiến Thức
+        </PostCategory>
+        <PostTitle className="post-title">
+          Hướng dẫn setup phòng cho người mới
+        </PostTitle>
+        <PostMeta></PostMeta>
       </div>
     </PostNewItemStyles>
   );
