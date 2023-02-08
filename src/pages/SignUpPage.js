@@ -1,22 +1,18 @@
 import React, { useEffect } from "react";
-import styled from "styled-components";
 import { Input } from "../components/input";
 import { Label } from "../components/label";
 import { useForm } from "react-hook-form";
-import { IconEyeClose, IconEyeOpen } from "../components/icon";
 import { Field } from "../components/field";
-import { useState } from "react";
 import { Button } from "../components/button";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Loading } from "../components/loading";
 import { toast } from "react-toastify";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "../firebase-data/firebase-config";
 import { NavLink, useNavigate } from "react-router-dom";
 import { addDoc, collection } from "firebase/firestore";
 import AuthPage from "./AuthPage";
-import SignInPage from "./SignInPage";
+import InputPassword from "../components/input/InputPassword";
 
 const schema = yup.object({
   fullname: yup.string().required("Please enter your fullname"),
@@ -62,7 +58,6 @@ const SignUpPage = () => {
     toast.success("Register successfully!");
     navigate("/");
   };
-  const [togglePassword, setTogglePassword] = useState(false);
   useEffect(() => {
     const arrError = Object.values(errors);
     if (arrError.length > 0) {
@@ -103,22 +98,7 @@ const SignUpPage = () => {
         </Field>
         <Field>
           <Label htmlFor="password">Password</Label>
-          <Input
-            type={togglePassword ? "text" : "password"}
-            name="password"
-            placeholder="Enter your password"
-            control={control}
-          >
-            {!togglePassword ? (
-              <IconEyeClose
-                onClick={() => setTogglePassword(true)}
-              ></IconEyeClose>
-            ) : (
-              <IconEyeOpen
-                onClick={() => setTogglePassword(false)}
-              ></IconEyeOpen>
-            )}
-          </Input>
+          <InputPassword control={control}></InputPassword>
         </Field>
         <div className="have-account">
           You already have an account? <NavLink to={"/sign-in"}>Login</NavLink>

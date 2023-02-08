@@ -18,10 +18,10 @@ const PostItemStyles = styled.div`
       border-radius: 16px;
     }
     &-category {
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     &-title {
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
   }
 `;

@@ -30,7 +30,7 @@ const AuthPageStyles = styled.div`
     margin-bottom: 20px;
     a {
       display: inline-block;
-      color: ${(props) => props.theme.greenLight};
+      color: ${(props) => props.theme.primary};
       font-weight: 500;
     }
   }
