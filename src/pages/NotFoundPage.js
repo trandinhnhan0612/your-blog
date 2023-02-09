@@ -32,7 +32,7 @@ const NotFoundPage = () => {
     <NotFoundPageStyles>
       <NavLink to={"/"} className={"logo"}>
         <img
-          srcSet="/logo2.png 2x"
+          srcSet="/logo3.png 2x"
           alt="your-blog"
           width={"300px"}
           height={"300px"}

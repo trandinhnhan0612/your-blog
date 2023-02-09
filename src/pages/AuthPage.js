@@ -13,8 +13,8 @@ const AuthPageStyles = styled.div`
     color: transparent;
     background-image: linear-gradient(
       to right bottom,
-      ${(props) => props.theme.primary},
-      ${(props) => props.theme.secondary}
+      ${(props) => props.theme.primary1},
+      ${(props) => props.theme.secondary1}
     );
     -webkit-background-clip: text;
     background-clip: text;
@@ -30,7 +30,7 @@ const AuthPageStyles = styled.div`
     margin-bottom: 20px;
     a {
       display: inline-block;
-      color: ${(props) => props.theme.primary};
+      color: ${(props) => props.theme.notFound};
       font-weight: 500;
     }
   }
@@ -41,7 +41,7 @@ const AuthPage = ({ children }) => {
     <AuthPageStyles>
       <div className="container">
         <NavLink to={"/"}>
-          <img srcSet="/logo2.png 2x" alt="your-blog" className="logo" />
+          <img srcSet="/logo3.png 2x" alt="your-blog" className="logo" />
         </NavLink>
         <h1 className="heading">Your Blogger</h1>
         {children}

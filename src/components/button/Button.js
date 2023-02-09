@@ -28,8 +28,8 @@ const ButtonStyles = styled.button`
       color: white;
       background-image: linear-gradient(
         to right bottom,
-        ${(props) => props.theme.primary},
-        ${(props) => props.theme.secondary}
+        ${(props) => props.theme.primary1},
+        ${(props) => props.theme.secondary1}
       );
     `};
   &:disabled {

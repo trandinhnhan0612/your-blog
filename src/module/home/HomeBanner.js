@@ -7,8 +7,8 @@ const HomeBannerStyles = styled.div`
   padding: 40px 0;
   background-image: linear-gradient(
     to right bottom,
-    ${(props) => props.theme.banner1},
-    ${(props) => props.theme.banner2}
+    ${(props) => props.theme.primary1},
+    ${(props) => props.theme.secondary1}
   );
   margin-bottom: 50px;
   .banner {

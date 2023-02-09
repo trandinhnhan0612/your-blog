@@ -7,6 +7,13 @@ const DashboardLayoutStyles = styled.div`
   max-width: 1600px;
   margin: 0 auto;
   .dashboard {
+    &-heading {
+      font-weight: bold;
+      font-size: 36px;
+      margin-bottom: 40px;
+      letter-spacing: 1px;
+      color: ${(props) => props.theme.primary};
+    }
     &-main {
       display: grid;
       grid-template-columns: 300px minmax(0, 1fr);
