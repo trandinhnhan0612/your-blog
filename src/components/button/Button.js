@@ -68,6 +68,7 @@ const Button = ({
   );
 };
 Button.propTypes = {
+  // dùng để check kiểu
   type: PropTypes.oneOf(["button", "submit"]),
   isLoading: PropTypes.bool,
   onClick: PropTypes.func,

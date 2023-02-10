@@ -40,9 +40,11 @@ const AuthPage = ({ children }) => {
   return (
     <AuthPageStyles>
       <div className="container">
-        <NavLink to={"/"}>
-          <img srcSet="/logo3.png 2x" alt="your-blog" className="logo" />
-        </NavLink>
+        <div className="text-center">
+          <NavLink to={"/"} className="inline-block">
+            <img srcSet="/logo3.png 2x" alt="your-blog" className="logo" />
+          </NavLink>
+        </div>
         <h1 className="heading">Your Blogger</h1>
         {children}
       </div>

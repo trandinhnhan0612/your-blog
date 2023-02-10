@@ -11,7 +11,6 @@ const Radio = ({ checked, children, name, control, ...rest }) => {
     <label>
       <input
         type="radio"
-        onChange={() => {}}
         checked={checked}
         className="hidden-input"
         {...field}
@@ -23,7 +22,10 @@ const Radio = ({ checked, children, name, control, ...rest }) => {
             checked ? "bg-green-400" : "bg-gray-200"
           }`}
         ></div>
-        <span>{children}</span>
+        <span>
+          {children}
+          {/* children ở đây là chữ như approved, children */}
+        </span>
       </div>
     </label>
   );

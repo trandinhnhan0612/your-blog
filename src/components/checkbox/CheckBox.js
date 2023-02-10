@@ -11,7 +11,6 @@ const CheckBox = ({ checked, children, control, name, ...rest }) => {
     <label>
       <input
         type="checkbox"
-        onChange={() => {}}
         checked={checked}
         className="hidden-input"
         {...field}
