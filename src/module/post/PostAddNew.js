@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import Field from "../../components/field/Field";
@@ -8,14 +8,12 @@ import Button from "../../components/button/Button";
 import Radio from "../../components/checkbox/Radio";
 import slugify from "slugify";
 import { postStatus } from "../../utils/constants";
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-  deleteObject,
-} from "firebase/storage";
 import { ImageUpload } from "../../components/image";
+import useFirbaseImage from "../../hooks/useFirebaseImage";
+import Toggle from "../../components/toggle/Toggle";
+import { db } from "../../firebase-data/firebase-config";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { Dropdown } from "../../components/dropdown";
 
 const PostAddNewStyles = styled.div``;
 
@@ -26,72 +24,41 @@ const PostAddNew = () => {
       title: "",
       slug: "",
       status: 2,
-      category: "",
+      categoryId: "",
+      hot: false,
     },
   });
   const watchStatus = watch("status");
-  const watchCategory = watch("category");
+  const watchHot = watch("hot");
+  // const watchCategory = watch("category");
   const addPostHandle = async (values) => {
     const cloneValues = { ...values };
-    // console.log(cloneValues); // check xem giá trị gồm những gì để đưa vào db
+    console.log(cloneValues); // check xem giá trị gồm những gì để đưa vào db
     cloneValues.slug = slugify(values.slug || values.title);
     cloneValues.status = Number(values.status);
   };
-  const [progress, setProgress] = useState(0);
-  const [image, setImage] = useState("");
-  const handleUploadImage = (file) => {
-    const storage = getStorage();
-    const storageRef = ref(storage, "images/" + file.name);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progressPercent =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setProgress(progressPercent);
-        switch (snapshot.state) {
-          case "paused":
-            console.log("Upload is paused");
-            break;
-          case "running":
-            console.log("Upload is running");
-            break;
-          default:
-            console.log("Nothing at all");
-        }
-      },
-      (error) => {
-        console.log("error");
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log("File available at", downloadURL);
-          setImage(downloadURL);
-        });
-      }
-    );
-  };
-  const onSelectImage = (e) => {
-    // console.log(e.target.files);
-    const file = e.target.files[0];
-    if (!file) return;
-    setValue("image_name", file.name);
-    handleUploadImage(file);
-  };
-  const handleDeleteImage = () => {
-    const storage = getStorage();
-    const imageRef = ref(storage, "images/" + getValues("image_name"));
 
-    deleteObject(imageRef)
-      .then(() => {
-        console.log("Delete image success!");
-        setImage("");
-        setProgress(0);
-      })
-      .catch((error) => {
-        console.log("Can not delete image");
+  const { image, progress, handleSelectImage, handleDeleteImage } =
+    useFirbaseImage(setValue, getValues);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    async function getData() {
+      const colRef = collection(db, "categories");
+      const q = query(colRef, where("status", "==", 1));
+      const querySnapshot = await getDocs(q);
+      let result = [];
+      querySnapshot.forEach((doc) => {
+        result.push({
+          id: doc.id,
+          ...doc.data(),
+        });
       });
-  };
+      setCategories(result);
+    }
+    getData();
+  }, []);
+
   return (
     <PostAddNewStyles>
       <h1 className="dashboard-heading">Thêm bài viết mới</h1>
@@ -119,13 +86,40 @@ const PostAddNew = () => {
           <Field>
             <Label>Image</Label>
             <ImageUpload
-              onChange={onSelectImage}
+              onChange={handleSelectImage}
               // onChange here is ...rest in ImageUpload
               handleDeleteImage={handleDeleteImage}
               className="h-[250px]"
               progress={progress}
               image={image}
             ></ImageUpload>
+          </Field>
+          <Field>
+            <Label>Category</Label>
+            <Dropdown>
+              <Dropdown.Select placeholder="Select the category"></Dropdown.Select>
+              <Dropdown.List>
+                {categories.length > 0 &&
+                  categories.map((item) => (
+                    <Dropdown.Option
+                      key={item.id}
+                      onClick={() => setValue("categoryId", item.id)}
+                    >
+                      {item.name}
+                    </Dropdown.Option>
+                  ))}
+                {/* <Dropdown.Option>FrontEnd</Dropdown.Option> here is props.children in Option.js */}
+              </Dropdown.List>
+            </Dropdown>
+          </Field>
+        </div>
+        <div className="grid grid-cols-2 gap-x-10 mb-10">
+          <Field>
+            <Label>Feature post</Label>
+            <Toggle
+              on={watchHot === true}
+              onClick={() => setValue("hot", !watchHot)}
+            ></Toggle>
           </Field>
           <Field>
             <Label>Status</Label>
@@ -156,12 +150,6 @@ const PostAddNew = () => {
               </Radio>
             </div>
           </Field>
-        </div>
-        <div className="grid grid-cols-2 gap-x-10 mb-10">
-          <Field>
-            <Label>Category</Label>
-          </Field>
-          <Field></Field>
         </div>
         <Button type="submit" className="mx-auto">
           Thêm mới
