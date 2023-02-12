@@ -32,6 +32,7 @@ const DashboardLayout = ({ children }) => {
         <SideBar></SideBar>
         <div className="dashboard-children">
           <Outlet></Outlet>
+          {/* outlet as children in dashboardlayout help display content: (postAddNew,...)  */}
         </div>
       </div>
     </DashboardLayoutStyles>

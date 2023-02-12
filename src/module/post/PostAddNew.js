@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import Field from "../../components/field/Field";
@@ -13,13 +13,14 @@ import {
   ref,
   uploadBytesResumable,
   getDownloadURL,
+  deleteObject,
 } from "firebase/storage";
 import { ImageUpload } from "../../components/image";
 
 const PostAddNewStyles = styled.div``;
 
 const PostAddNew = () => {
-  const { control, watch, setValue, handleSubmit } = useForm({
+  const { control, watch, setValue, handleSubmit, getValues } = useForm({
     mode: "onChange",
     defaultValues: {
       title: "",
@@ -35,8 +36,9 @@ const PostAddNew = () => {
     // console.log(cloneValues); // check xem giá trị gồm những gì để đưa vào db
     cloneValues.slug = slugify(values.slug || values.title);
     cloneValues.status = Number(values.status);
-    // handleUploadImage(cloneValues.image);
   };
+  const [progress, setProgress] = useState(0);
+  const [image, setImage] = useState("");
   const handleUploadImage = (file) => {
     const storage = getStorage();
     const storageRef = ref(storage, "images/" + file.name);
@@ -44,9 +46,9 @@ const PostAddNew = () => {
     uploadTask.on(
       "state_changed",
       (snapshot) => {
-        const progress =
+        const progressPercent =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
+        setProgress(progressPercent);
         switch (snapshot.state) {
           case "paused":
             console.log("Upload is paused");
@@ -55,7 +57,7 @@ const PostAddNew = () => {
             console.log("Upload is running");
             break;
           default:
-            console.log("Nothing");
+            console.log("Nothing at all");
         }
       },
       (error) => {
@@ -64,6 +66,7 @@ const PostAddNew = () => {
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           console.log("File available at", downloadURL);
+          setImage(downloadURL);
         });
       }
     );
@@ -72,7 +75,22 @@ const PostAddNew = () => {
     // console.log(e.target.files);
     const file = e.target.files[0];
     if (!file) return;
-    setValue("image", file);
+    setValue("image_name", file.name);
+    handleUploadImage(file);
+  };
+  const handleDeleteImage = () => {
+    const storage = getStorage();
+    const imageRef = ref(storage, "images/" + getValues("image_name"));
+
+    deleteObject(imageRef)
+      .then(() => {
+        console.log("Delete image success!");
+        setImage("");
+        setProgress(0);
+      })
+      .catch((error) => {
+        console.log("Can not delete image");
+      });
   };
   return (
     <PostAddNewStyles>
@@ -99,8 +117,15 @@ const PostAddNew = () => {
         </div>
         <div className="grid grid-cols-2 gap-x-10 mb-10">
           <Field>
-            <ImageUpload>Image</ImageUpload>
-            <input type="file" name="image" onChange={onSelectImage} />
+            <Label>Image</Label>
+            <ImageUpload
+              onChange={onSelectImage}
+              // onChange here is ...rest in ImageUpload
+              handleDeleteImage={handleDeleteImage}
+              className="h-[250px]"
+              progress={progress}
+              image={image}
+            ></ImageUpload>
           </Field>
           <Field>
             <Label>Status</Label>
