@@ -10,9 +10,10 @@ import { toast } from "react-toastify";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "../firebase-data/firebase-config";
 import { NavLink, useNavigate } from "react-router-dom";
-import { addDoc, collection } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import AuthPage from "./AuthPage";
 import InputPassword from "../components/input/InputPassword";
+import slugify from "slugify";
 
 const schema = yup.object({
   fullname: yup.string().required("Please enter your fullname"),
@@ -39,7 +40,7 @@ const SignUpPage = () => {
     resolver: yupResolver(schema),
   });
   const handleSignUp = async (values) => {
-    // value ở đây là fullname, email, password
+    // value here is fullname, email, password
     if (!isValid) return;
     const user = await createUserWithEmailAndPassword(
       auth,
@@ -49,12 +50,19 @@ const SignUpPage = () => {
     await updateProfile(auth.currentUser, {
       displayName: values.fullname,
     });
-    const colRef = collection(db, "users");
-    addDoc(colRef, {
+    await setDoc(doc(db, "users", auth.currentUser.uid), {
+      // auth.currentUser.uid here in order to get userId , then display name when we add new post of userId
       fullname: values.fullname,
       email: values.email,
       password: values.password,
+      username: slugify(values.fullname, { lower: true }),
     });
+    // const colRef = collection(db, "users");
+    // await addDoc(colRef, {
+    //   fullname: values.fullname,
+    //   email: values.email,
+    //   password: values.password,
+    // });
     toast.success("Register successfully!");
     navigate("/");
   };

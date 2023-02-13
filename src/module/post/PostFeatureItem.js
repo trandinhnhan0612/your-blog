@@ -1,5 +1,8 @@
-import React from "react";
+import { async } from "@firebase/util";
+import { doc, getDoc } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { db } from "../../firebase-data/firebase-config";
 import PostCategory from "./PostCategory";
 import PostImage from "./PostImage";
 import PostMeta from "./PostMeta";
@@ -48,23 +51,45 @@ const PostFeatureItemStyles = styled.div`
   }
 `;
 
-const PostFeatureItem = () => {
+const PostFeatureItem = ({ data }) => {
+  const [category, setCategory] = useState("");
+  const [user, setUser] = useState("");
+  useEffect(() => {
+    async function fetchCategory() {
+      const docRef = doc(db, "categories", data.categoryId);
+      const docSnap = await getDoc(docRef);
+      setCategory(docSnap.data());
+    }
+    fetchCategory();
+  }, [data.categoryId]);
+  useEffect(() => {
+    async function fetchUser() {
+      if (data.userId) {
+        const docRef = doc(db, "users", data.userId);
+        const docSnap = await getDoc(docRef);
+        // console.log(docSnap.data()); this is use check data right?
+        if (docSnap.data) {
+          setUser(docSnap.data());
+        }
+      }
+    }
+    fetchUser();
+  }, [data.userId]);
+  if (!data || !data.id) return null;
   return (
     <PostFeatureItemStyles>
       <PostImage
-        url="https://images.unsplash.com/photo-1614624532983-4ce03382d63d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2662&q=80"
+        url={data.image}
         alt="unsplash"
         className="post-image"
       ></PostImage>
       <div className="post-overplay"></div>
       <div className="post-content">
         <div className="post-top">
-          <PostCategory>Kiến Thức</PostCategory>
-          <PostMeta></PostMeta>
+          {category?.name && <PostCategory>{category.name}</PostCategory>}
+          <PostMeta auhthorName={user?.fullname}></PostMeta>
         </div>
-        <PostTitle size="big">
-          Hướng dẫn setup phòng cực chill dành cho dân gamer
-        </PostTitle>
+        <PostTitle size="big">{data.title}</PostTitle>
       </div>
     </PostFeatureItemStyles>
   );

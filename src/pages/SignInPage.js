@@ -42,13 +42,14 @@ const SignInPage = () => {
       });
     }
   }, [errors]);
-  const { userInfo } = useAuth();
+  const { userInfor } = useAuth();
   const navigate = useNavigate();
   useEffect(() => {
-    document.title = "Sign In Page";
-    if (userInfo?.email) navigate("/");
+    document.title = "Login Page";
+    if (userInfor?.email) navigate("/");
+    // if has userInfor and userInfor.email, you will go to homepage
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userInfo]);
+  }, [userInfor]);
   const handleSignIn = async (values) => {
     if (!isValid) return;
     await signInWithEmailAndPassword(auth, values.email, values.password);
@@ -76,7 +77,7 @@ const SignInPage = () => {
         </Field>
         <div className="have-account">
           You have register for an account?{" "}
-          <NavLink to={"/sign-up"}>Register</NavLink>
+          <NavLink to={"/sign-up"}>Register an account</NavLink>{" "}
         </div>
         <Button
           type="submit"

@@ -19,14 +19,14 @@ const PostMetaStyles = styled.div`
 
 const PostMeta = ({
   date = "Mar 23",
-  auhtorName = "Như Ý",
+  auhthorName = "Như Ý",
   className = "",
 }) => {
   return (
     <PostMetaStyles className={className}>
       <span className="post-time">{date}</span>
       <span className="post-dot"></span>
-      <span className="post-author">{auhtorName}</span>
+      <span className="post-author">{auhthorName}</span>
     </PostMetaStyles>
   );
 };

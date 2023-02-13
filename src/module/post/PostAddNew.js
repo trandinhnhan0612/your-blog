@@ -12,13 +12,24 @@ import { ImageUpload } from "../../components/image";
 import useFirbaseImage from "../../hooks/useFirebaseImage";
 import Toggle from "../../components/toggle/Toggle";
 import { db } from "../../firebase-data/firebase-config";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  serverTimestamp,
+  where,
+} from "firebase/firestore";
 import { Dropdown } from "../../components/dropdown";
+import { useAuth } from "../../contexts/auth-context";
+import { toast } from "react-toastify";
 
 const PostAddNewStyles = styled.div``;
 
 const PostAddNew = () => {
-  const { control, watch, setValue, handleSubmit, getValues } = useForm({
+  const { userInfor } = useAuth();
+  console.log(userInfor);
+  const { control, watch, setValue, handleSubmit, getValues, reset } = useForm({
     mode: "onChange",
     defaultValues: {
       title: "",
@@ -26,22 +37,40 @@ const PostAddNew = () => {
       status: 2,
       categoryId: "",
       hot: false,
+      image: "",
     },
   });
   const watchStatus = watch("status");
   const watchHot = watch("hot");
+  const { image, progress, handleSelectImage, handleDeleteImage } =
+    useFirbaseImage(setValue, getValues);
   // const watchCategory = watch("category");
   const addPostHandle = async (values) => {
     const cloneValues = { ...values };
-    console.log(cloneValues); // check xem giá trị gồm những gì để đưa vào db
-    cloneValues.slug = slugify(values.slug || values.title);
+    cloneValues.slug = slugify(values.slug || values.title, { lower: true });
     cloneValues.status = Number(values.status);
+    const colRef = collection(db, "posts");
+    await addDoc(colRef, {
+      ...cloneValues,
+      image,
+      userId: userInfor.uid,
+      createdAt: serverTimestamp,
+      // ...cloneValues here is:  title: cloneValues.title, slug: cloneValues.slug, hot: cloneValues.hot, status: cloneValues.status, categoryId: cloneValues.categoryId,
+    });
+    toast.success("Add new post successfully!");
+    reset({
+      title: "",
+      slug: "",
+      status: 2,
+      categoryId: "",
+      hot: false,
+      image: "",
+    });
+    setSelectCategory({});
+    // console.log(cloneValues); // check value what include to put in db
   };
-
-  const { image, progress, handleSelectImage, handleDeleteImage } =
-    useFirbaseImage(setValue, getValues);
   const [categories, setCategories] = useState([]);
-
+  const [selectCategory, setSelectCategory] = useState("");
   useEffect(() => {
     async function getData() {
       const colRef = collection(db, "categories");
@@ -58,6 +87,10 @@ const PostAddNew = () => {
     }
     getData();
   }, []);
+  const handleClickOption = (item) => {
+    setValue("categoryId", item.id);
+    setSelectCategory(item);
+  };
 
   return (
     <PostAddNewStyles>
@@ -97,13 +130,15 @@ const PostAddNew = () => {
           <Field>
             <Label>Category</Label>
             <Dropdown>
-              <Dropdown.Select placeholder="Select the category"></Dropdown.Select>
+              <Dropdown.Select
+                placeholder={`${selectCategory.name || "Select the category"}`}
+              ></Dropdown.Select>
               <Dropdown.List>
                 {categories.length > 0 &&
                   categories.map((item) => (
                     <Dropdown.Option
                       key={item.id}
-                      onClick={() => setValue("categoryId", item.id)}
+                      onClick={() => handleClickOption(item)}
                     >
                       {item.name}
                     </Dropdown.Option>
@@ -111,6 +146,12 @@ const PostAddNew = () => {
                 {/* <Dropdown.Option>FrontEnd</Dropdown.Option> here is props.children in Option.js */}
               </Dropdown.List>
             </Dropdown>
+            {selectCategory?.name && (
+              <span className="inline-block p-3 rounded-lg bg-orange-50 text-sm text-orange-600 font-medium">
+                {selectCategory?.name}
+                {/* ?. if the right has, we will take (selectCategory.name), if have not is it's ok */}
+              </span>
+            )}
           </Field>
         </div>
         <div className="grid grid-cols-2 gap-x-10 mb-10">
