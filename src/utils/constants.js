@@ -1,8 +1,6 @@
 export const theme = {
-  primary: "#4E65FF",
   sidebarHover: "#F77F00",
   primary1: "#ff4e50",
-  secondary: "#92EFFD",
   secondary1: "#f9d423",
   grayDark: "#292D32",
   grayLight: "#E7ECF3",

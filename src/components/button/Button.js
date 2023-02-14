@@ -20,7 +20,7 @@ const ButtonStyles = styled.button`
     props.kind === "secondary" &&
     css`
       background-color: white;
-      color: ${(props) => props.theme.greenLight};
+      color: ${(props) => props.theme.sidebarHover};
     `}
   ${(props) =>
     props.kind === "primary" &&
@@ -31,6 +31,12 @@ const ButtonStyles = styled.button`
         ${(props) => props.theme.primary1},
         ${(props) => props.theme.secondary1}
       );
+    `};
+  ${(props) =>
+    props.kind === "ghost" &&
+    css`
+      color: ${(props) => props.theme.sidebarHover};
+      background-color: #fff7ed;
     `};
   &:disabled {
     opacity: 0.5;
@@ -73,7 +79,7 @@ Button.propTypes = {
   isLoading: PropTypes.bool,
   onClick: PropTypes.func,
   children: PropTypes.node,
-  kind: PropTypes.oneOf(["primary", "secondary"]),
+  kind: PropTypes.oneOf(["primary", "secondary", "ghost"]),
 };
 
 export default Button;

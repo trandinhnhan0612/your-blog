@@ -60,12 +60,17 @@ const HeaderStyles = styled.header`
     transform: translateY(-50%);
     right: 25px;
   }
+  .header-auth {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
 `;
-function getLastName(name) {
-  if (!name) return "User";
-  const length = name.split(" ").length;
-  return name.split(" ")[length - 1];
-}
+// function getLastName(name) {
+//   if (!name) return "User";
+//   const length = name.split(" ").length;
+//   return name.split(" ")[length - 1];
+// }
 const Header = () => {
   const { userInfor } = useAuth();
   return (
@@ -132,10 +137,18 @@ const Header = () => {
             </Button>
           ) : (
             <div className="header-auth">
-              <span>Welcome back, </span>
+              {/* <span>Welcome back, </span>
               <strong className="text-avatar">
                 {getLastName(userInfor?.displayName)}
-              </strong>
+              </strong> */}
+              <Button
+                type="button"
+                height="52px"
+                className="header-button"
+                to="/dashboard"
+              >
+                Dashboard
+              </Button>
             </div>
           )}
         </div>

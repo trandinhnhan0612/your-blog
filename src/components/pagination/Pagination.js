@@ -22,10 +22,17 @@ const PaginationStyles = styled.div`
       align-items: center;
       justify-content: center;
       font-weight: 500;
+      border-radius: 10px;
+      transition: all 0.1s linear;
       &:hover {
         color: white;
         background-color: ${(props) => props.theme.sidebarHover};
       }
+    }
+    &-next,
+    &-prev {
+      background-color: #ffffff;
+      box-shadow: 0px 3px 6px rgba(131, 164, 166, 0.2);
     }
     &-item.is-current {
       color: white;

@@ -44,7 +44,7 @@ const DashboardHeader = () => {
         <span className="hidden lg:inline-block ">Your Blog</span>
       </NavLink>
       <div className="header-right">
-        <Button to="/dashboard" className="header-button" height="52px">
+        <Button to="/manage/add-post" className="header-button" height="52px">
           Viết bài mới
         </Button>
         <div className="header-avatar">

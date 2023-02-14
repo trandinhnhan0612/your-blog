@@ -1,12 +1,20 @@
 import React from "react";
 import Table from "../../components/table/Table";
 import Pagination from "../../components/pagination/Pagination";
+import { Dropdown } from "../../components/dropdown";
+import { Button } from "../../components/button";
 
 const PostManage = () => {
   return (
     <div>
-      <h1 className="dashboard-heading">Quản Lý Bài Đăng</h1>
-      <div className="mb-10 flex justify-end">
+      <h1 className="dashboard-heading">Bài viết</h1>
+      <p className="dashboard-short-desc">Quản lý tất cả bài viết</p>
+      <div className="mb-10 flex justify-end gap-5">
+        <div className="w-full max-w-[200px]">
+          <Dropdown>
+            <Dropdown.Select placeholder="Danh mục"></Dropdown.Select>
+          </Dropdown>
+        </div>
         <div className="w-full max-w-[300px]">
           <input
             type="text"
@@ -111,8 +119,11 @@ const PostManage = () => {
           </tr>
         </tbody>
       </Table>
-      <div className="mt-10">
-        <Pagination></Pagination>
+      <div className="mt-10 text-center">
+        {/* <Pagination></Pagination> */}
+        <Button kind="ghost" className="mx-auto w-[160px]">
+          See more+
+        </Button>
       </div>
     </div>
   );
