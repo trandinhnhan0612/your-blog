@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 const NotFoundPageStyles = styled.div`
@@ -28,6 +29,9 @@ const NotFoundPageStyles = styled.div`
 `;
 
 const NotFoundPage = () => {
+  useEffect(() => {
+    document.title = "Not found 404";
+  });
   return (
     <NotFoundPageStyles>
       <NavLink to={"/"} className={"logo"}>

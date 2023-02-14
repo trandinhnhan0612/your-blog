@@ -1,6 +1,6 @@
-import { async } from "@firebase/util";
 import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
+import slugify from "slugify";
 import styled from "styled-components";
 import { db } from "../../firebase-data/firebase-config";
 import PostCategory from "./PostCategory";
@@ -76,6 +76,10 @@ const PostFeatureItem = ({ data }) => {
     fetchUser();
   }, [data.userId]);
   if (!data || !data.id) return null;
+  const date = data?.createdAt?.seconds
+    ? new Date(data?.createdAt?.seconds * 1000)
+    : new Date();
+  const formatDate = new Date(date).toLocaleDateString("vi-VI");
   return (
     <PostFeatureItemStyles>
       <PostImage
@@ -86,10 +90,19 @@ const PostFeatureItem = ({ data }) => {
       <div className="post-overplay"></div>
       <div className="post-content">
         <div className="post-top">
-          {category?.name && <PostCategory>{category.name}</PostCategory>}
-          <PostMeta auhthorName={user?.fullname}></PostMeta>
+          {category?.name && (
+            <PostCategory to={category.slug}>{category.name}</PostCategory>
+          )}
+          <PostMeta
+            to={slugify(user?.fullname || "", { lower: true })}
+            // || "" to case have not is it is not error
+            auhthorName={user?.fullname}
+            date={formatDate}
+          ></PostMeta>
         </div>
-        <PostTitle size="big">{data.title}</PostTitle>
+        <PostTitle to={data.slug} size="big">
+          {data.title}
+        </PostTitle>
       </div>
     </PostFeatureItemStyles>
   );

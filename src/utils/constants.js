@@ -1,5 +1,6 @@
 export const theme = {
   primary: "#4E65FF",
+  sidebarHover: "#F77F00",
   primary1: "#ff4e50",
   secondary: "#92EFFD",
   secondary1: "#f9d423",
@@ -13,8 +14,10 @@ export const theme = {
   banner2: "#2AF598",
   grayF3: "#F3EDFF",
   gray6B: "#6B6B6B",
+  gray4B: "#4B5264",
   gray23: "#232323",
   gray80: "#808191",
+  textHeadingDash: "#171725",
 };
 export const postStatus = {
   APPROVED: 1,

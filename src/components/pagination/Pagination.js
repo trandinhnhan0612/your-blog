@@ -24,12 +24,12 @@ const PaginationStyles = styled.div`
       font-weight: 500;
       &:hover {
         color: white;
-        background-color: ${(props) => props.theme.secondary};
+        background-color: ${(props) => props.theme.sidebarHover};
       }
     }
     &-item.is-current {
       color: white;
-      background-color: ${(props) => props.secondary};
+      background-color: ${(props) => props.sidebarHover};
     }
   }
 `;

@@ -45,10 +45,10 @@ const PostNewestItem = () => {
       ></PostImage>
       <div className="post-content">
         <PostCategory className="post-category" type="secondary">
-          Kiến Thức
+          NodeJS
         </PostCategory>
         <PostTitle className="post-title">
-          Hướng dẫn setup phòng cho người mới
+          Hướng dẫn NodeJs với ExpressJs cho người mới bắt đầu
         </PostTitle>
         <PostMeta></PostMeta>
       </div>

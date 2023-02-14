@@ -42,35 +42,49 @@ const PostAddNew = () => {
   });
   const watchStatus = watch("status");
   const watchHot = watch("hot");
-  const { image, progress, handleSelectImage, handleDeleteImage } =
-    useFirbaseImage(setValue, getValues);
+  const {
+    image,
+    handleResetUpload,
+    progress,
+    handleSelectImage,
+    handleDeleteImage,
+  } = useFirbaseImage(setValue, getValues);
   // const watchCategory = watch("category");
-  const addPostHandle = async (values) => {
-    const cloneValues = { ...values };
-    cloneValues.slug = slugify(values.slug || values.title, { lower: true });
-    cloneValues.status = Number(values.status);
-    const colRef = collection(db, "posts");
-    await addDoc(colRef, {
-      ...cloneValues,
-      image,
-      userId: userInfor.uid,
-      createdAt: serverTimestamp,
-      // ...cloneValues here is:  title: cloneValues.title, slug: cloneValues.slug, hot: cloneValues.hot, status: cloneValues.status, categoryId: cloneValues.categoryId,
-    });
-    toast.success("Add new post successfully!");
-    reset({
-      title: "",
-      slug: "",
-      status: 2,
-      categoryId: "",
-      hot: false,
-      image: "",
-    });
-    setSelectCategory({});
-    // console.log(cloneValues); // check value what include to put in db
-  };
   const [categories, setCategories] = useState([]);
   const [selectCategory, setSelectCategory] = useState("");
+  const [loading, setLoading] = useState(false);
+  const addPostHandle = async (values) => {
+    try {
+      setLoading(true);
+      const cloneValues = { ...values };
+      cloneValues.slug = slugify(values.slug || values.title, { lower: true });
+      cloneValues.status = Number(values.status);
+      const colRef = collection(db, "posts");
+      await addDoc(colRef, {
+        ...cloneValues,
+        image,
+        userId: userInfor.uid,
+        createdAt: serverTimestamp(),
+        // ...cloneValues here is:  title: cloneValues.title, slug: cloneValues.slug, hot: cloneValues.hot, status: cloneValues.status, categoryId: cloneValues.categoryId,
+      });
+      toast.success("Add new post successfully!");
+      reset({
+        title: "",
+        slug: "",
+        status: 2,
+        categoryId: "",
+        hot: false,
+        image: "",
+      });
+      handleResetUpload();
+      setSelectCategory({});
+      // console.log(cloneValues); // check value what include to put in db
+    } catch (error) {
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
     async function getData() {
       const colRef = collection(db, "categories");
@@ -87,6 +101,9 @@ const PostAddNew = () => {
     }
     getData();
   }, []);
+  useEffect(() => {
+    document.title = "Your Blog - Add new post";
+  });
   const handleClickOption = (item) => {
     setValue("categoryId", item.id);
     setSelectCategory(item);
@@ -95,10 +112,13 @@ const PostAddNew = () => {
   return (
     <PostAddNewStyles>
       <h1 className="dashboard-heading">Thêm bài viết mới</h1>
+      <p className="dashboard-short-desc">
+        Thêm bài viết mới thể hiện niềm đam mê của bạn
+      </p>
       <form onSubmit={handleSubmit(addPostHandle)}>
-        <div className="grid grid-cols-2 gap-x-10 mb-10">
+        <div className="form-layout">
           <Field>
-            <Label>Title</Label>
+            <Label>Tiêu đề</Label>
             <Input
               control={control}
               name="title"
@@ -115,9 +135,9 @@ const PostAddNew = () => {
             ></Input>
           </Field>
         </div>
-        <div className="grid grid-cols-2 gap-x-10 mb-10">
+        <div className="form-layout">
           <Field>
-            <Label>Image</Label>
+            <Label>Hình ảnh</Label>
             <ImageUpload
               onChange={handleSelectImage}
               // onChange here is ...rest in ImageUpload
@@ -128,7 +148,7 @@ const PostAddNew = () => {
             ></ImageUpload>
           </Field>
           <Field>
-            <Label>Category</Label>
+            <Label>Danh mục</Label>
             <Dropdown>
               <Dropdown.Select
                 placeholder={`${selectCategory.name || "Select the category"}`}
@@ -154,17 +174,17 @@ const PostAddNew = () => {
             )}
           </Field>
         </div>
-        <div className="grid grid-cols-2 gap-x-10 mb-10">
+        <div className="form-layout">
           <Field>
-            <Label>Feature post</Label>
+            <Label>Bài viết nổi bật</Label>
             <Toggle
               on={watchHot === true}
               onClick={() => setValue("hot", !watchHot)}
             ></Toggle>
           </Field>
           <Field>
-            <Label>Status</Label>
-            <div className="flex items-center gap-x-5">
+            <Label>Trạng thái</Label>
+            <div className="flex items-center gap-5 flex-wrap">
               <Radio
                 name="status"
                 control={control}
@@ -192,7 +212,12 @@ const PostAddNew = () => {
             </div>
           </Field>
         </div>
-        <Button type="submit" className="mx-auto">
+        <Button
+          type="submit"
+          className="mx-auto w-[200px]"
+          isLoading={loading}
+          disabled={loading}
+        >
           Thêm mới
         </Button>
       </form>

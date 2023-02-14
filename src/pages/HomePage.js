@@ -1,5 +1,6 @@
 import { signOut } from "firebase/auth";
 import React from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 import Header from "../components/layout/Header";
 import Layout from "../components/layout/Layout";
@@ -11,6 +12,9 @@ import HomeNewest from "../module/home/HomeNewest";
 const HomePageStyles = styled.div``;
 
 const HomePage = () => {
+  useEffect(() => {
+    document.title = "Your Blog - Homepage";
+  });
   return (
     <HomePageStyles>
       <Layout>

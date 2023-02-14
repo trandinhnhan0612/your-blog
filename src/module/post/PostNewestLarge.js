@@ -31,9 +31,9 @@ const PostNewestLarge = () => {
         className="post-image"
         to="/"
       ></PostImage>
-      <PostCategory className="post-category">Kiến Thức</PostCategory>
+      <PostCategory className="post-category">ReactJS</PostCategory>
       <PostTitle size="big" className="post-title">
-        Hướng dẫn setup phòng dành cho dân Blogger
+        Hướng dẫn redux từ cơ bản tới nâng cao cho người mới bắt đầu
       </PostTitle>
       <PostMeta></PostMeta>
     </PostNewLargerStyles>

@@ -7,17 +7,6 @@ const SideBarStyles = styled.div`
   background: #ffffff;
   box-shadow: 10px 10px 20px rgba(218, 213, 213, 0.15);
   border-radius: 12px;
-  .sidebar-logo {
-    display: flex;
-    align-items: center;
-    font-weight: 600;
-    gap: 0 20px;
-    img {
-      max-width: 50px;
-    }
-    margin-bottom: 20px;
-    padding: 20px 20px 0;
-  }
   .menu-item {
     display: flex;
     align-items: center;
@@ -29,9 +18,12 @@ const SideBarStyles = styled.div`
     cursor: pointer;
     &.active,
     &:hover {
-      background: #e3f2fd;
-      color: ${(props) => props.theme.primary};
+      background: ${(props) => props.theme.grayLight};
+      color: ${(props) => props.theme.sidebarHover};
     }
+  }
+  @media screen and (max-width: 1023.98px) {
+    display: none;
   }
 `;
 const sidebarLinks = [
@@ -140,10 +132,6 @@ const sidebarLinks = [
 const SideBar = () => {
   return (
     <SideBarStyles className="sidebar">
-      <div className="sidebar-logo">
-        <img srcSet="/logo3.png 2x" alt="" />
-        <span>Your Blogger</span>
-      </div>
       {sidebarLinks.map((link) => (
         <NavLink to={link.url} className="menu-item" key={link.title}>
           <span className="menu-icon">{link.icon}</span>

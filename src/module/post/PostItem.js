@@ -34,9 +34,9 @@ const PostItem = () => {
         className="post-image"
         to="/"
       ></PostImage>
-      <PostCategory className="post-category">Kiến Thức</PostCategory>
+      <PostCategory className="post-category">ReactJS</PostCategory>
       <PostTitle className="post-title">
-        Hướng dẫn thiết kế phòng cực chill
+        Hướng dẫn học ReactJs từ cơ bản tới nâng cao cho người mới bắt đầu
       </PostTitle>
       <PostMeta></PostMeta>
     </PostItemStyles>
