@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 const NotFoundPageStyles = styled.div`
   height: 100vh;
@@ -40,6 +40,7 @@ const NotFoundPageStyles = styled.div`
 `;
 
 const PageNotFound = () => {
+  const navigate = useNavigate();
   useEffect(() => {
     document.title = "Not found 404";
   });
@@ -53,9 +54,9 @@ const PageNotFound = () => {
           was loading incorrectly.
         </p>
       </div>
-      <NavLink to={"/"} className={"back"}>
-        Back to Home
-      </NavLink>
+      <button onClick={() => navigate(-1)} className="back">
+        Go to back
+      </button>
     </NotFoundPageStyles>
   );
 };

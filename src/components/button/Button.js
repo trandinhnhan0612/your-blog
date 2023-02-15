@@ -36,7 +36,9 @@ const ButtonStyles = styled.button`
     props.kind === "ghost" &&
     css`
       color: ${(props) => props.theme.sidebarHover};
-      background-color: #fff7ed;
+      /* background-color: #fff7ed; */
+      background-color: white;
+      border: 1px solid ${(props) => props.theme.sidebarHover}; ;
     `};
   &:disabled {
     opacity: 0.5;

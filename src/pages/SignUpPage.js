@@ -16,15 +16,15 @@ import InputPassword from "../components/input/InputPassword";
 import slugify from "slugify";
 
 const schema = yup.object({
-  fullname: yup.string().required("Please enter your fullname"),
+  fullname: yup.string().required("Vui lòng nhập họ và tên của bạn"),
   email: yup
     .string()
-    .email("Please enter valid email address")
-    .required("Please enter your email address"),
+    .email("Vui lòng nhập địa chỉ email hợp lệ")
+    .required("vui lòng nhập địa chỉ enail"),
   password: yup
     .string()
-    .min(8, "Your password must be at least 8 characters or greater")
-    .required("Please enter your password"),
+    .min(8, "Mật khẩu phải có ít nhất 8 kí tự")
+    .required("Vui lòng nhập mật khẩu"),
 });
 
 const SignUpPage = () => {
@@ -63,7 +63,7 @@ const SignUpPage = () => {
     //   email: values.email,
     //   password: values.password,
     // });
-    toast.success("Register successfully!");
+    toast.success("Đăng kí thành công!");
     navigate("/");
   };
   useEffect(() => {
@@ -87,29 +87,30 @@ const SignUpPage = () => {
         autoComplete="off"
       >
         <Field>
-          <Label htmlFor="fullname">FullName</Label>
+          <Label htmlFor="fullname">Họ và tên</Label>
           <Input
             type="text"
             name="fullname"
-            placeholder="Enter your full name"
+            placeholder="Nhập họ và tên của bạn"
             control={control}
           />
         </Field>
         <Field>
-          <Label htmlFor="email">Email Address</Label>
+          <Label htmlFor="email">Địa chỉ Email</Label>
           <Input
             type="email"
             name="email"
-            placeholder="Enter your email"
+            placeholder="Nhập địa chỉ email của bạn"
             control={control}
           />
         </Field>
         <Field>
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">Mật khẩu</Label>
           <InputPassword control={control}></InputPassword>
         </Field>
         <div className="have-account">
-          You already have an account? <NavLink to={"/sign-in"}>Login</NavLink>
+          Bạn đã có tài khoản rồi?{" "}
+          <NavLink to={"/sign-in"}>Đăng nhập ngay</NavLink>
         </div>
         <Button
           type="submit"
@@ -121,7 +122,7 @@ const SignUpPage = () => {
           isLoading={isSubmitting}
           disabled={isSubmitting}
         >
-          Sign Up
+          Đăng Kí
         </Button>
       </form>
     </AuthPage>

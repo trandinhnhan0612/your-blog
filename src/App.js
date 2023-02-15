@@ -1,10 +1,12 @@
 import { Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./contexts/auth-context";
 import CategoryAddNew from "./module/category/CategoryAddNew";
+import CategoryManage from "./module/category/CategoryManage";
 import DashboardLayout from "./module/dashboard/DashboardLayout";
 import PostAddNew from "./module/post/PostAddNew";
 import PostManage from "./module/post/PostManage";
 import UserAddNew from "./module/user/UserAddNew";
+import UserManage from "./module/user/UserManage";
 import UserProfile from "./module/user/UserProfile";
 import DashboardPage from "./pages/DashboardPage";
 import HomePage from "./pages/HomePage";
@@ -40,16 +42,24 @@ function App() {
               element={<PostAddNew></PostAddNew>}
             ></Route>
             <Route
+              path="/manage/category"
+              element={<CategoryManage></CategoryManage>}
+            ></Route>
+            <Route
               path="/manage/add-category"
               element={<CategoryAddNew></CategoryAddNew>}
             ></Route>
             <Route
-              path="/profile"
-              element={<UserProfile></UserProfile>}
+              path="/manage/user"
+              element={<UserManage></UserManage>}
             ></Route>
             <Route
               path="/manage/add-user"
               element={<UserAddNew></UserAddNew>}
+            ></Route>
+            <Route
+              path="/profile"
+              element={<UserProfile></UserProfile>}
             ></Route>
           </Route>
         </Routes>

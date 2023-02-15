@@ -17,12 +17,12 @@ import InputPassword from "../components/input/InputPassword";
 const schema = yup.object({
   email: yup
     .string()
-    .email("Please enter valid email address")
-    .required("Please enter your email address"),
+    .email("Vui lòng nhập địa chỉ email hợp lệ")
+    .required("Vui lòng nhập địa chỉ email"),
   password: yup
     .string()
-    .min(8, "Your password must be at least 8 characters or greater")
-    .required("Please enter your password"),
+    .min(8, "Mật khẩu phải có ít nhất 8 kí tự")
+    .required("Vui lòng nhập mật khẩu"),
 });
 const SignInPage = () => {
   const {
@@ -52,8 +52,13 @@ const SignInPage = () => {
   }, [userInfor]);
   const handleSignIn = async (values) => {
     if (!isValid) return;
-    await signInWithEmailAndPassword(auth, values.email, values.password);
-    navigate("/");
+    try {
+      await signInWithEmailAndPassword(auth, values.email, values.password);
+      navigate("/");
+    } catch (error) {
+      if (error.message.includes("Sai mật khẩu"))
+        toast.error("Có vẻ như mật khẩu của bạn đã sai");
+    }
   };
   return (
     <AuthPage>
@@ -63,21 +68,20 @@ const SignInPage = () => {
         autoComplete="off"
       >
         <Field>
-          <Label htmlFor="email">Email Address</Label>
+          <Label htmlFor="email">Địa chỉ Email</Label>
           <Input
             type="email"
             name="email"
-            placeholder="Enter your email address"
+            placeholder="Nhập địa chỉ email của bạn"
             control={control}
           ></Input>
         </Field>
         <Field>
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">Mật khẩu</Label>
           <InputPassword control={control}></InputPassword>
         </Field>
         <div className="have-account">
-          You have register for an account?{" "}
-          <NavLink to={"/sign-up"}>Register an account</NavLink>{" "}
+          Bạn chưa có tài khoản? <NavLink to={"/sign-up"}>Đăng kí ngay</NavLink>{" "}
         </div>
         <Button
           type="submit"
@@ -85,7 +89,7 @@ const SignInPage = () => {
           isLoading={isSubmitting}
           disabled={isSubmitting}
         >
-          Login
+          Đăng Nhập
         </Button>
       </form>
     </AuthPage>

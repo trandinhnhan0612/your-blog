@@ -47,7 +47,6 @@ const PostAddNew = () => {
     handleSelectImage,
     handleDeleteImage,
   } = useFirbaseImage(setValue, getValues);
-  // const watchCategory = watch("category");
   const [categories, setCategories] = useState([]);
   const [selectCategory, setSelectCategory] = useState("");
   const [loading, setLoading] = useState(false);
@@ -65,7 +64,7 @@ const PostAddNew = () => {
         createdAt: serverTimestamp(),
         // ...cloneValues here is:  title: cloneValues.title, slug: cloneValues.slug, hot: cloneValues.hot, status: cloneValues.status, categoryId: cloneValues.categoryId,
       });
-      toast.success("Add new post successfully!");
+      toast.success("Thêm bài viết thành công!");
       reset({
         title: "",
         slug: "",
