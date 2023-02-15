@@ -16,7 +16,6 @@ const DashboardLayoutStyles = styled.div`
       color: ${(props) => props.theme.textHeadingDash};
     }
     &-short-desc {
-      margin-bottom: 40px;
       color: ${(props) => props.theme.gray80};
     }
     &-main {
@@ -30,9 +29,6 @@ const DashboardLayoutStyles = styled.div`
       &-heading {
         font-size: 20px;
       }
-      &-short-desc {
-        margin-bottom: 25px;
-      }
       &-main {
         grid-template-columns: 100%;
         padding: 20px;
@@ -41,7 +37,7 @@ const DashboardLayoutStyles = styled.div`
   }
 `;
 
-const DashboardLayout = ({ children }) => {
+const DashboardLayout = () => {
   const { userInfor } = useAuth();
   if (!userInfor) return <PageNotFound></PageNotFound>;
   return (

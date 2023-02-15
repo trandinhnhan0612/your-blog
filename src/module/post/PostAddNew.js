@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import styled from "styled-components";
-import Field from "../../components/field/Field";
 import Label from "../../components/label/Label";
 import Input from "../../components/input/Input";
 import Button from "../../components/button/Button";
@@ -23,8 +21,8 @@ import {
 import { Dropdown } from "../../components/dropdown";
 import { useAuth } from "../../contexts/auth-context";
 import { toast } from "react-toastify";
-
-const PostAddNewStyles = styled.div``;
+import DashboardHeading from "../dashboard/DashboardHeading";
+import { Field, FieldCheckBox } from "../../components/field";
 
 const PostAddNew = () => {
   const { userInfor } = useAuth();
@@ -110,11 +108,11 @@ const PostAddNew = () => {
   };
 
   return (
-    <PostAddNewStyles>
-      <h1 className="dashboard-heading">Thêm bài viết mới</h1>
-      <p className="dashboard-short-desc">
-        Thêm bài viết mới thể hiện niềm đam mê của bạn
-      </p>
+    <>
+      <DashboardHeading
+        title="Thêm bài viết mới"
+        desc="Thêm bài viết mới thể hiện niềm đam mê của bạn"
+      ></DashboardHeading>
       <form onSubmit={handleSubmit(addPostHandle)}>
         <div className="form-layout">
           <Field>
@@ -184,7 +182,7 @@ const PostAddNew = () => {
           </Field>
           <Field>
             <Label>Trạng thái</Label>
-            <div className="flex items-center gap-5 flex-wrap">
+            <FieldCheckBox>
               <Radio
                 name="status"
                 control={control}
@@ -209,7 +207,7 @@ const PostAddNew = () => {
               >
                 Reject
               </Radio>
-            </div>
+            </FieldCheckBox>
           </Field>
         </div>
         <Button
@@ -221,7 +219,7 @@ const PostAddNew = () => {
           Thêm mới
         </Button>
       </form>
-    </PostAddNewStyles>
+    </>
   );
 };
 

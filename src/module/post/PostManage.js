@@ -3,12 +3,15 @@ import Table from "../../components/table/Table";
 import Pagination from "../../components/pagination/Pagination";
 import { Dropdown } from "../../components/dropdown";
 import { Button } from "../../components/button";
+import DashboardHeading from "../dashboard/DashboardHeading";
 
 const PostManage = () => {
   return (
     <div>
-      <h1 className="dashboard-heading">Bài viết</h1>
-      <p className="dashboard-short-desc">Quản lý tất cả bài viết</p>
+      <DashboardHeading
+        title="Bài viết"
+        desc="Quản lý tất cả bài viết"
+      ></DashboardHeading>
       <div className="mb-10 flex justify-end gap-5">
         <div className="w-full max-w-[200px]">
           <Dropdown>
@@ -19,7 +22,7 @@ const PostManage = () => {
           <input
             type="text"
             className="w-full p-4 rounded-lg border border-solid border-gray-300"
-            placeholder="Search post..."
+            placeholder="Tìm kiếm..."
           />
         </div>
       </div>

@@ -48,7 +48,7 @@ const sidebarLinks = [
     ),
   },
   {
-    title: "Post",
+    title: "Bài viết",
     url: "/manage/post",
     icon: (
       <svg
@@ -68,7 +68,7 @@ const sidebarLinks = [
     ),
   },
   {
-    title: "Category",
+    title: "Danh mục",
     url: "/manage/category",
     icon: (
       <svg
@@ -88,7 +88,7 @@ const sidebarLinks = [
     ),
   },
   {
-    title: "User",
+    title: "Tài khoản",
     url: "/manage/user",
     icon: (
       <svg
@@ -108,7 +108,7 @@ const sidebarLinks = [
     ),
   },
   {
-    title: "Logout",
+    title: "Đẵng xuất",
     url: "/",
     icon: (
       <svg
