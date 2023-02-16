@@ -1,28 +1,26 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import DashboardHeading from "../dashboard/DashboardHeading";
 import { Field, FieldCheckBox } from "../../components/field";
 import { Label } from "../../components/label";
-import { Button } from "../../components/button";
 import { Input } from "../../components/input";
 import Radio from "../../components/checkbox/Radio";
-import slugify from "slugify";
 import { categoryStatus } from "../../utils/constants";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { Button } from "../../components/button";
+import { useEffect } from "react";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase-data/firebase-config";
-import { useAuth } from "../../contexts/auth-context";
+import slugify from "slugify";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
-const CategoryAddNew = () => {
-  const { userInfor } = useAuth();
-  const navigate = useNavigate();
+const CategoryUpdate = () => {
   const {
     control,
-    reset,
     watch,
-    formState: { isSubmitting, isValid },
+    reset,
     handleSubmit,
+    formState: { isSubmitting },
   } = useForm({
     mode: "onChange",
     defaultValues: {
@@ -32,49 +30,45 @@ const CategoryAddNew = () => {
       createdAt: new Date(),
     },
   });
-  const handleAddNewCategory = async (values) => {
-    if (!isValid) return;
-    const newValues = { ...values };
-    // ...values to clone new values without affect to ogirinal values
-    newValues.slug = slugify(newValues.name || newValues.slug, {
-      lower: true,
-    });
-    newValues.status = Number(values.status);
-    const colRef = collection(db, "categories");
-    try {
-      await addDoc(colRef, {
-        ...newValues,
-        userId: userInfor.uid,
-        createdAt: serverTimestamp(),
-      });
-      toast.success("Thêm danh mục thành công!");
-      navigate("/manage/category");
-    } catch (error) {
-      toast.error(error.message);
-    } finally {
-      reset({
-        name: "",
-        slug: "",
-        status: 1,
-        createdAt: new Date(),
-      });
-    }
-  };
+  const [params] = useSearchParams();
   const watchStatus = watch("status");
+  const categoryId = params.get("id");
+  const navigate = useNavigate();
+  useEffect(() => {
+    async function fetchData() {
+      const colRef = doc(db, "categories", categoryId);
+      const singleDoc = await getDoc(colRef);
+      reset(singleDoc.data());
+      // reset in order to reset defaultValue to signleDoc
+    }
+    fetchData();
+  }, [categoryId, reset]);
+  const handleUpdateCategory = async (values) => {
+    const colRef = doc(db, "categories", categoryId);
+    await updateDoc(colRef, {
+      name: values.name,
+      slug: slugify(values.slug || values.name, { lower: true }),
+      status: Number(values.status),
+    });
+    toast.success("Cập nhật danh mục thành công!");
+    navigate("/manage/category");
+  };
+  if (!categoryId) return null;
   return (
     <div>
       <DashboardHeading
         title="Danh mục"
-        desc="Thêm danh mục mới"
+        // desc={`Cập nhật danh mục id: ${categoryId}`}
+        desc="Cập nhật danh mục"
       ></DashboardHeading>
-      <form onSubmit={handleSubmit(handleAddNewCategory)} autoComplete="off">
+      <form onSubmit={handleSubmit(handleUpdateCategory)} autoComplete="off">
         <div className="form-layout">
           <Field>
             <Label>Tên danh mục</Label>
             <Input
               control={control}
               name="name"
-              placeholder="Enter your category name"
+              placeholder="Nhập tên danh mục"
               required
             ></Input>
           </Field>
@@ -83,7 +77,7 @@ const CategoryAddNew = () => {
             <Input
               control={control}
               name="slug"
-              placeholder="Enter your slug"
+              placeholder="Nhập slug"
             ></Input>
           </Field>
         </div>
@@ -117,11 +111,11 @@ const CategoryAddNew = () => {
           disabled={isSubmitting}
           isLoading={isSubmitting}
         >
-          Thêm mới
+          Cập Nhật
         </Button>
       </form>
     </div>
   );
 };
 
-export default CategoryAddNew;
+export default CategoryUpdate;

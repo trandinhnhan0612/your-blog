@@ -8,6 +8,7 @@ export const theme = {
   blueLight: "#A4D96C",
   focusColor: "#0466C8",
   notFound: "#F77F00",
+  bgc404: "#171725",
   banner1: "#08AEEA",
   banner2: "#2AF598",
   grayF3: "#F3EDFF",

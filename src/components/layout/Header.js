@@ -93,7 +93,7 @@ const Header = () => {
             <input
               type="text"
               className="search-input"
-              placeholder="Search posts..."
+              placeholder="Tìm kiếm..."
             />
             <span className="search-icon">
               <svg
