@@ -22,12 +22,12 @@ createdAd (time create)
 
 <!-- collection: user
 id
-displayName
+userName
 avatar
 email
 password
 status: 1(active) 2(pending) 3(ban)
 role: 1(Admin) 2(Blogger) 3(User)
-permission:
+permission: "ADD_POST"
 createdAd
  -->

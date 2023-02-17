@@ -23,12 +23,27 @@ import { useAuth } from "../../contexts/auth-context";
 import { toast } from "react-toastify";
 import DashboardHeading from "../dashboard/DashboardHeading";
 import { Field, FieldCheckBox } from "../../components/field";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+const schema = yup.object({
+  title: yup.string().required("Tiêu đề không được để trống"),
+});
 
 const PostAddNew = () => {
   const { userInfor } = useAuth();
   console.log(userInfor);
-  const { control, watch, setValue, handleSubmit, getValues, reset } = useForm({
+  const {
+    control,
+    watch,
+    setValue,
+    handleSubmit,
+    getValues,
+    reset,
+    formState: { errors },
+  } = useForm({
     mode: "onChange",
+    resolver: yupResolver(schema),
     defaultValues: {
       title: "",
       slug: "",
@@ -120,8 +135,8 @@ const PostAddNew = () => {
               control={control}
               name="title"
               placeholder="Enter your title"
-              required
             ></Input>
+            <p className="text-red-500">{errors.title?.message}</p>
           </Field>
           <Field>
             <Label>Slug</Label>

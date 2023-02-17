@@ -54,7 +54,7 @@ const PageNotFound = () => {
           was loading incorrectly.
         </p>
       </div>
-      <button onClick={() => navigate(-1)} className="back">
+      <button onClick={() => navigate("/")} className="back">
         Go to back
       </button>
     </NotFoundPageStyles>

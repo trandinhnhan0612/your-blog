@@ -10,17 +10,18 @@ import { toast } from "react-toastify";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "../firebase-data/firebase-config";
 import { NavLink, useNavigate } from "react-router-dom";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import AuthPage from "./AuthPage";
 import InputPassword from "../components/input/InputPassword";
 import slugify from "slugify";
+import { userStatus, userRole } from "../utils/constants";
 
 const schema = yup.object({
   fullname: yup.string().required("Vui lòng nhập họ và tên của bạn"),
   email: yup
     .string()
     .email("Vui lòng nhập địa chỉ email hợp lệ")
-    .required("vui lòng nhập địa chỉ enail"),
+    .required("Vui lòng nhập địa chỉ email"),
   password: yup
     .string()
     .min(8, "Mật khẩu phải có ít nhất 8 kí tự")
@@ -33,8 +34,6 @@ const SignUpPage = () => {
     control,
     handleSubmit,
     formState: { errors, isValid, isSubmitting },
-    watch,
-    reset,
   } = useForm({
     mode: "onChange",
     resolver: yupResolver(schema),
@@ -49,13 +48,21 @@ const SignUpPage = () => {
     );
     await updateProfile(auth.currentUser, {
       displayName: values.fullname,
+      photoURL:
+        "https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8YXZhdGFyfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
     });
     await setDoc(doc(db, "users", auth.currentUser.uid), {
       // auth.currentUser.uid here in order to get userId , then display name when we add new post of userId
+      // setDoc is set id with hand, addDoc is set id auto
       fullname: values.fullname,
       email: values.email,
       password: values.password,
       username: slugify(values.fullname, { lower: true }),
+      avatar:
+        "https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8YXZhdGFyfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      status: userStatus.ACTIVE,
+      role: userRole.USER,
+      createdAt: serverTimestamp(),
     });
     // const colRef = collection(db, "users");
     // await addDoc(colRef, {
@@ -80,7 +87,6 @@ const SignUpPage = () => {
   });
   return (
     <AuthPage>
-      {/* <h2 className="sologan">Đăng nội dung thể hiện niềm đam mê của bạn</h2> */}
       <form
         className="form"
         onSubmit={handleSubmit(handleSignUp)}
