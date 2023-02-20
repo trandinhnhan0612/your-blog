@@ -1,8 +1,6 @@
-import { doc, getDoc } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import slugify from "slugify";
 import styled from "styled-components";
-import { db } from "../../firebase-data/firebase-config";
 import PostCategory from "./PostCategory";
 import PostImage from "./PostImage";
 import PostMeta from "./PostMeta";
@@ -52,34 +50,13 @@ const PostFeatureItemStyles = styled.div`
 `;
 
 const PostFeatureItem = ({ data }) => {
-  const [category, setCategory] = useState("");
-  const [user, setUser] = useState("");
-  useEffect(() => {
-    async function fetchCategory() {
-      const docRef = doc(db, "categories", data.categoryId);
-      const docSnap = await getDoc(docRef);
-      setCategory(docSnap.data());
-    }
-    fetchCategory();
-  }, [data.categoryId]);
-  useEffect(() => {
-    async function fetchUser() {
-      if (data.userId) {
-        const docRef = doc(db, "users", data.userId);
-        const docSnap = await getDoc(docRef);
-        // console.log(docSnap.data()); this is use check data right?
-        if (docSnap.data) {
-          setUser(docSnap.data());
-        }
-      }
-    }
-    fetchUser();
-  }, [data.userId]);
+  console.log(data); // check data contains?
   if (!data || !data.id) return null;
   const date = data?.createdAt?.seconds
     ? new Date(data?.createdAt?.seconds * 1000)
     : new Date();
   const formatDate = new Date(date).toLocaleDateString("vi-VI");
+  const { category, user } = data; // destructuring data
   return (
     <PostFeatureItemStyles>
       <PostImage
@@ -94,8 +71,7 @@ const PostFeatureItem = ({ data }) => {
             <PostCategory to={category.slug}>{category.name}</PostCategory>
           )}
           <PostMeta
-            to={slugify(user?.fullname || "", { lower: true })}
-            // || "" to case have not is it is not error
+            to={slugify(user?.fullname || "", { lower: true })} // || "" to case have not is it is not error
             auhthorName={user?.fullname}
             date={formatDate}
           ></PostMeta>

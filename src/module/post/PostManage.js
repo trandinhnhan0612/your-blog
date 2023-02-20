@@ -1,6 +1,5 @@
 import React from "react";
 import Table from "../../components/table/Table";
-import Pagination from "../../components/pagination/Pagination";
 import { Dropdown } from "../../components/dropdown";
 import { Button } from "../../components/button";
 import DashboardHeading from "../dashboard/DashboardHeading";
@@ -29,17 +28,15 @@ const PostManage = () => {
       <Table>
         <thead>
           <tr>
-            <th></th>
             <th>Id</th>
-            <th>Post</th>
-            <th>Category</th>
-            <th>Auhtor</th>
-            <th>Actions</th>
+            <th>Bài viết</th>
+            <th>Danh mục</th>
+            <th>Tác giả</th>
+            <th>Hoạt động</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td></td>
             <td>01</td>
             <td>
               <div className="flex items-center gap-x-3">

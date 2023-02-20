@@ -13,6 +13,8 @@ import { db } from "../../firebase-data/firebase-config";
 import {
   addDoc,
   collection,
+  doc,
+  getDoc,
   getDocs,
   query,
   serverTimestamp,
@@ -32,7 +34,7 @@ const schema = yup.object({
 
 const PostAddNew = () => {
   const { userInfor } = useAuth();
-  console.log(userInfor);
+  // console.log(userInfor);
   const {
     control,
     watch,
@@ -48,9 +50,10 @@ const PostAddNew = () => {
       title: "",
       slug: "",
       status: 2,
-      categoryId: "",
+      category: {},
       hot: false,
       image: "",
+      user: {},
     },
   });
   const watchStatus = watch("status");
@@ -65,6 +68,23 @@ const PostAddNew = () => {
   const [categories, setCategories] = useState([]);
   const [selectCategory, setSelectCategory] = useState("");
   const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    async function fetchDataUser() {
+      if (!userInfor.email) return;
+      const q = query(
+        collection(db, "users"),
+        where("email", "==", userInfor.email)
+      );
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        setValue("user", {
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+    }
+    fetchDataUser();
+  }, [userInfor.email]);
   const addPostHandle = async (values) => {
     try {
       setLoading(true);
@@ -72,10 +92,10 @@ const PostAddNew = () => {
       cloneValues.slug = slugify(values.slug || values.title, { lower: true });
       cloneValues.status = Number(values.status);
       const colRef = collection(db, "posts");
+      console.log(cloneValues);
       await addDoc(colRef, {
         ...cloneValues,
         image,
-        userId: userInfor.uid,
         createdAt: serverTimestamp(),
         // ...cloneValues here is:  title: cloneValues.title, slug: cloneValues.slug, hot: cloneValues.hot, status: cloneValues.status, categoryId: cloneValues.categoryId,
       });
@@ -84,13 +104,14 @@ const PostAddNew = () => {
         title: "",
         slug: "",
         status: 2,
-        categoryId: "",
+        category: {},
         hot: false,
         image: "",
+        user: {},
       });
       handleResetUpload();
       setSelectCategory({});
-      // console.log(cloneValues); // check value what include to put in db
+      console.log(cloneValues); // check value what include to put in db
     } catch (error) {
       setLoading(false);
     } finally {
@@ -116,8 +137,13 @@ const PostAddNew = () => {
   useEffect(() => {
     document.title = "Your Blog - Add new post";
   });
-  const handleClickOption = (item) => {
-    setValue("categoryId", item.id);
+  const handleClickOption = async (item) => {
+    const colRef = doc(db, "categories", item.id);
+    const docData = await getDoc(colRef);
+    setValue("category", {
+      id: docData.id,
+      ...docData.data(),
+    });
     setSelectCategory(item);
   };
 

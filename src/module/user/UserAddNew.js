@@ -37,6 +37,13 @@ const UserAddNew = () => {
       createdAt: new Date(),
     },
   });
+  const {
+    image,
+    handleResetUpload,
+    progress,
+    handleSelectImage,
+    handleDeleteImage,
+  } = useFirbaseImage(setValue, getValues);
   const handleAddUser = async (values) => {
     if (!isValid) return;
     try {
@@ -74,13 +81,6 @@ const UserAddNew = () => {
   };
   const watchStatus = watch("status");
   const watchRole = watch("role");
-  const {
-    image,
-    handleResetUpload,
-    progress,
-    handleSelectImage,
-    handleDeleteImage,
-  } = useFirbaseImage(setValue, getValues);
   return (
     <div>
       <DashboardHeading
