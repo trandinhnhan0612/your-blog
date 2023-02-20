@@ -3,8 +3,89 @@ import Table from "../../components/table/Table";
 import { Dropdown } from "../../components/dropdown";
 import { Button } from "../../components/button";
 import DashboardHeading from "../dashboard/DashboardHeading";
+import { useState } from "react";
+import { useEffect } from "react";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  limit,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
+import { db } from "../../firebase-data/firebase-config";
+import { useNavigate } from "react-router-dom";
+import { ActionDelete, ActionEdit, ActionView } from "../../components/action";
+import Swal from "sweetalert2";
+import { postStatus } from "../../utils/constants";
+import LabelStatus from "../../components/label/LabelStatus";
+
+const POST_PER_PAGE = 10;
 
 const PostManage = () => {
+  const [postList, setPostList] = useState([]);
+  const [search, setSearch] = useState("");
+  const [lastDoc, setLastDoc] = useState();
+  const navigate = useNavigate();
+  useEffect(() => {
+    async function fetchData() {
+      const colRef = collection(db, "posts");
+      // search function
+      const searchRef = search
+        ? query(
+            colRef,
+            where("name", ">=", search),
+            where("name", "<=", search + "utf8")
+          )
+        : query(colRef, limit(POST_PER_PAGE));
+      const documentSnapshots = await getDocs(searchRef);
+      const lastVisible =
+        documentSnapshots.docs[documentSnapshots.docs.length - 1];
+      onSnapshot(searchRef, (snapshot) => {
+        let results = [];
+        snapshot.forEach((doc) => {
+          results.push({
+            id: doc.id,
+            ...doc.data(),
+          });
+        });
+        setPostList(results);
+      });
+      setLastDoc(lastVisible);
+    }
+    fetchData();
+  }, [search]);
+  async function handleDeletePost(postId) {
+    const colRef = doc(db, "posts", postId);
+    Swal.fire({
+      title: "Bạn muốn xóa bài viết này?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Xóa",
+      cancelButtonText: "Hủy",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await deleteDoc(colRef);
+        Swal.fire("Xóa thành công!", "Bài viết này đã được xóa", "success");
+      }
+    });
+  }
+  const renderPostStatus = (status) => {
+    switch (status) {
+      case postStatus.APPROVED:
+        return <LabelStatus type="success">Approved</LabelStatus>;
+      case postStatus.PENDING:
+        return <LabelStatus type="warning">Pending</LabelStatus>;
+      case postStatus.REJECTED:
+        return <LabelStatus type="danger">Rejected</LabelStatus>;
+      default:
+        break;
+    }
+  };
   return (
     <div>
       <DashboardHeading
@@ -32,97 +113,58 @@ const PostManage = () => {
             <th>Bài viết</th>
             <th>Danh mục</th>
             <th>Tác giả</th>
+            <th>Trạng thái</th>
             <th>Hoạt động</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>01</td>
-            <td>
-              <div className="flex items-center gap-x-3">
-                <img
-                  src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1548&q=80"
-                  alt=""
-                  className="w-[66px] h-[55px] rounded object-cover"
-                />
-                <div className="flex-1">
-                  <h3 className="font-semibold">One Specical 4k Camera</h3>
-                  <time className="text-sm text-gray-500">
-                    Date: 9 Feb 2023
-                  </time>
-                </div>
-              </div>
-            </td>
-            <td>
-              <span className="text-gray-500">Camera Gear</span>
-            </td>
-            <td>
-              <span className="text-gray-500">Như Ý</span>
-            </td>
-            <td>
-              <div className="flex items-center gap-x-3 text-gray-500">
-                <span className="flex items-center justify-center w-10 h-10 border border-gray-200 rounded cursor-pointer">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-5 h-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+          {postList.length > 0 &&
+            postList.map((post) => (
+              <tr key={post.id}>
+                <td title={post.id}>{post.id.slice(0, 5) + "..."}</td>
+                <td className="!pr-[100px]">
+                  <div className="flex items-center gap-x-3">
+                    <img
+                      src={post.image}
+                      alt=""
+                      className="w-[66px] h-[55px] rounded object-cover"
                     />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                    />
-                  </svg>
-                </span>
-                <span className="flex items-center justify-center w-10 h-10 border border-gray-200 rounded cursor-pointer">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-5 h-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                    />
-                  </svg>
-                </span>
-                <span className="flex items-center justify-center w-10 h-10 border border-gray-200 rounded cursor-pointer">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-5 h-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                    />
-                  </svg>
-                </span>
-              </div>
-            </td>
-          </tr>
+                    <div className="flex-1">
+                      <h3 className="font-semibold">{post.title}</h3>
+                      <time className="text-sm text-gray-500">
+                        Date:
+                        {new Date(
+                          post?.createdAt?.seconds * 1000
+                        ).toLocaleDateString("vi-VI")}
+                      </time>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span className="text-gray-500">{post.category?.name}</span>
+                </td>
+                <td>
+                  <span className="text-gray-500">{post.user?.fullname}</span>
+                </td>
+                <td>{renderPostStatus(Number(post?.status))}</td>
+                <td>
+                  <div className="flex items-center gap-x-3 text-gray-500">
+                    <ActionView
+                      onClick={() => navigate(`/${post.slug}`)}
+                    ></ActionView>
+                    <ActionEdit></ActionEdit>
+                    <ActionDelete
+                      onClick={() => handleDeletePost(post.id)}
+                    ></ActionDelete>
+                  </div>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </Table>
       <div className="mt-10 text-center">
-        {/* <Pagination></Pagination> */}
         <Button kind="ghost" className="mx-auto w-[160px]">
-          See more+
+          Tải thêm
         </Button>
       </div>
     </div>

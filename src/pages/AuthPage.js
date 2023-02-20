@@ -45,7 +45,7 @@ const AuthPage = ({ children }) => {
             <img srcSet="/logo3.png 2x" alt="your-blog" className="logo" />
           </NavLink>
         </div>
-        <h1 className="heading">Your Blogger</h1>
+        <h1 className="heading">Your Blog</h1>
         {children}
       </div>
     </AuthPageStyles>
