@@ -15,7 +15,7 @@ const UserProfile = () => {
     <div>
       <DashboardHeading
         title="Thông tin tài khoản"
-        desc="Cập nhật thông tin tài khoản của bạn"
+        desc="Thông tin tài khoản của bạn"
       ></DashboardHeading>
       <form>
         <div className="text-center mb-10">

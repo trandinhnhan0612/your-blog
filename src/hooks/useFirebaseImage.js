@@ -7,7 +7,12 @@ import {
 } from "firebase/storage";
 import { useState } from "react";
 
-export default function useFirbaseImage(setValue, getValues) {
+export default function useFirbaseImage(
+  setValue,
+  getValues,
+  imageName = null,
+  callbacks = null
+) {
   const [progress, setProgress] = useState(0);
   const [image, setImage] = useState("");
   if (!setValue || !getValues) return;
@@ -52,15 +57,20 @@ export default function useFirbaseImage(setValue, getValues) {
   };
   const handleDeleteImage = () => {
     const storage = getStorage();
-    const imageRef = ref(storage, "images/" + getValues("image_name"));
+    const imageRef = ref(
+      storage,
+      "images/" + (imageName || getValues("image_name"))
+    );
 
     deleteObject(imageRef)
       .then(() => {
         console.log("Delete image success!");
         setImage("");
         setProgress(0);
+        callbacks && callbacks(); // deleteAvatar in UserUpdate.js is callback and it will call here
       })
       .catch((error) => {
+        console.log(error);
         console.log("Can not delete image");
       });
   };
@@ -70,6 +80,7 @@ export default function useFirbaseImage(setValue, getValues) {
   };
   return {
     image,
+    setImage,
     handleResetUpload,
     progress,
     handleSelectImage,

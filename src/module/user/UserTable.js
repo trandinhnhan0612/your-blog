@@ -4,14 +4,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { ActionDelete, ActionEdit } from "../../components/action";
 import { db } from "../../firebase-data/firebase-config";
-import {
-  collection,
-  deleteDoc,
-  doc,
-  onSnapshot,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, deleteDoc, doc, onSnapshot } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { userStatus, userRole } from "../../utils/constants";
 import LabelStatus from "../../components/label/LabelStatus";

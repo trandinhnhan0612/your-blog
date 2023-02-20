@@ -8,6 +8,7 @@ const PostCategoryStyles = styled.div`
   color: ${(props) => props.theme.gray6B};
   font-size: 14px;
   font-weight: 600;
+  max-width: 95px;
   a {
     display: block;
   }

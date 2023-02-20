@@ -39,7 +39,7 @@ const CategoryUpdate = () => {
       const colRef = doc(db, "categories", categoryId);
       const singleDoc = await getDoc(colRef);
       reset(singleDoc.data());
-      // reset in order to reset defaultValue to signleDoc
+      // reset in order to reset defaultValue to get signleDoc
     }
     fetchData();
   }, [categoryId, reset]);

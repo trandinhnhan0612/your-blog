@@ -23,7 +23,7 @@ createdAd (time create)
 <!-- collection: user
 id
 userName
-avatar
+avatar: url image_name
 email
 password
 status: 1(active) 2(pending) 3(ban)
