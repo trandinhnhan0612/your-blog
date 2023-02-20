@@ -84,6 +84,7 @@ const PostAddNew = () => {
       });
     }
     fetchDataUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userInfor.email]);
   const addPostHandle = async (values) => {
     try {
@@ -189,7 +190,8 @@ const PostAddNew = () => {
             <Label>Danh mục</Label>
             <Dropdown>
               <Dropdown.Select
-                placeholder={`${selectCategory.name || "Select the category"}`}
+                // placeholder={`${selectCategory.name || "Select the category"}`}
+                placeholder="Chọn danh mục"
               ></Dropdown.Select>
               <Dropdown.List>
                 {categories.length > 0 &&
