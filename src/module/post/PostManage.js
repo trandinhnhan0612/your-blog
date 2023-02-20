@@ -13,6 +13,7 @@ import {
   limit,
   onSnapshot,
   query,
+  startAfter,
   where,
 } from "firebase/firestore";
 import { db } from "../../firebase-data/firebase-config";
@@ -21,13 +22,15 @@ import { ActionDelete, ActionEdit, ActionView } from "../../components/action";
 import Swal from "sweetalert2";
 import { postStatus } from "../../utils/constants";
 import LabelStatus from "../../components/label/LabelStatus";
+import { debounce } from "lodash";
 
-const POST_PER_PAGE = 10;
+const POST_PER_PAGE = 5;
 
 const PostManage = () => {
   const [postList, setPostList] = useState([]);
   const [search, setSearch] = useState("");
   const [lastDoc, setLastDoc] = useState();
+  const [total, setTotal] = useState(0);
   const navigate = useNavigate();
   useEffect(() => {
     async function fetchData() {
@@ -36,13 +39,16 @@ const PostManage = () => {
       const searchRef = search
         ? query(
             colRef,
-            where("name", ">=", search),
-            where("name", "<=", search + "utf8")
+            where("title", ">=", search),
+            where("title", "<=", search + "utf8")
           )
         : query(colRef, limit(POST_PER_PAGE));
       const documentSnapshots = await getDocs(searchRef);
       const lastVisible =
         documentSnapshots.docs[documentSnapshots.docs.length - 1];
+      onSnapshot(colRef, (snapshot) => {
+        setTotal(snapshot.size);
+      });
       onSnapshot(searchRef, (snapshot) => {
         let results = [];
         snapshot.forEach((doc) => {
@@ -86,6 +92,31 @@ const PostManage = () => {
         break;
     }
   };
+  // search post
+  const handleSearchPost = debounce((e) => {
+    setSearch(e.target.value);
+  }, 250);
+  const handleLoadMorePost = async () => {
+    const nextRef = query(
+      collection(db, "posts"),
+      startAfter(lastDoc || 0),
+      limit(POST_PER_PAGE)
+    );
+    onSnapshot(nextRef, (snapshot) => {
+      let results = [];
+      snapshot.forEach((doc) => {
+        results.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+      setPostList([...postList, ...results]);
+    });
+    const documentSnapshots = await getDocs(nextRef);
+    const lastVisible =
+      documentSnapshots.docs[documentSnapshots.docs.length - 1];
+    setLastDoc(lastVisible);
+  };
   return (
     <div>
       <DashboardHeading
@@ -103,6 +134,8 @@ const PostManage = () => {
             type="text"
             className="w-full p-4 rounded-lg border border-solid border-gray-300"
             placeholder="Tìm kiếm..."
+            onChange={handleSearchPost}
+            // because using onChange is call fast, it will request continuos, so we use debounce
           />
         </div>
       </div>
@@ -152,7 +185,11 @@ const PostManage = () => {
                     <ActionView
                       onClick={() => navigate(`/${post.slug}`)}
                     ></ActionView>
-                    <ActionEdit></ActionEdit>
+                    <ActionEdit
+                      onClick={() =>
+                        navigate(`/manage/update-post?id=${post.id}`)
+                      }
+                    ></ActionEdit>
                     <ActionDelete
                       onClick={() => handleDeletePost(post.id)}
                     ></ActionDelete>
@@ -162,11 +199,17 @@ const PostManage = () => {
             ))}
         </tbody>
       </Table>
-      <div className="mt-10 text-center">
-        <Button kind="ghost" className="mx-auto w-[160px]">
-          Tải thêm
-        </Button>
-      </div>
+      {total > postList.length && (
+        <div className="mt-10 text-center">
+          <Button
+            onClick={handleLoadMorePost}
+            kind="ghost"
+            className="mx-auto w-[160px]"
+          >
+            Tải thêm
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

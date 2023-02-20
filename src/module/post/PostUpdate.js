@@ -1,10 +1,15 @@
 import React from "react";
-import styled from "styled-components";
-
-const PostUpdateStyles = styled.div``;
+import DashboardHeading from "../dashboard/DashboardHeading";
 
 const PostUpdate = () => {
-  return <PostUpdateStyles></PostUpdateStyles>;
+  return (
+    <div>
+      <DashboardHeading
+        title="Bài viết"
+        desc="Cập nhật bài viết của bạn"
+      ></DashboardHeading>
+    </div>
+  );
 };
 
 export default PostUpdate;
