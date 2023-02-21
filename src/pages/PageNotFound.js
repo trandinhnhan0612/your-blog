@@ -1,5 +1,4 @@
 import React from "react";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 const NotFoundPageStyles = styled.div`
@@ -41,9 +40,6 @@ const NotFoundPageStyles = styled.div`
 
 const PageNotFound = () => {
   const navigate = useNavigate();
-  useEffect(() => {
-    document.title = "Not found 404";
-  });
   return (
     <NotFoundPageStyles>
       <div className="page-content">

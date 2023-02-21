@@ -9,10 +9,10 @@ import PostItem from "../module/post/PostItem";
 import PageNotFound from "../pages/PageNotFound";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
-import { async } from "@firebase/util";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../firebase-data/firebase-config";
 import parse from "html-react-parser";
+import AuthorBox from "../components/author/AuthorBox";
 
 const PostDetailPageStyles = styled.div`
   padding-bottom: 100px;
@@ -137,15 +137,7 @@ const PostDetailPage = () => {
             <div className="entry-content">
               {parse(postInfor.content || "")}
             </div>
-            <div className="author">
-              <div className="author-image">
-                <img src={user?.avatar} alt="" />
-              </div>
-              <div className="author-content">
-                <h3 className="author-name">{user?.fullname}</h3>
-                <p className="author-desc">{user?.description}</p>
-              </div>
-            </div>
+            <AuthorBox userId={user.id}></AuthorBox>
           </div>
           <div className="post-related">
             <Heading>Bài Viết Liên Quan</Heading>

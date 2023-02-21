@@ -34,12 +34,6 @@ const HomeNewest = () => {
             <PostNewestItem></PostNewestItem>
           </div>
         </div>
-        <div className="grid-layout grid-layout--primary">
-          <PostItem></PostItem>
-          <PostItem></PostItem>
-          <PostItem></PostItem>
-          <PostItem></PostItem>
-        </div>
       </div>
     </HomeNewestStyles>
   );

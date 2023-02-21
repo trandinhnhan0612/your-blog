@@ -14,6 +14,7 @@ import { db } from "../../firebase-data/firebase-config";
 import { userRole, userStatus } from "../../utils/constants";
 import DashboardHeading from "../dashboard/DashboardHeading";
 import useFirbaseImage from "../../hooks/useFirebaseImage";
+import Textarea from "../../components/textarea/Textarea";
 
 const UserUpdate = () => {
   const {
@@ -181,6 +182,12 @@ const UserUpdate = () => {
                 User
               </Radio>
             </FieldCheckBox>
+          </Field>
+        </div>
+        <div className="form-layout">
+          <Field>
+            <Label>Mô tả về bạn</Label>
+            <Textarea name="description" control={control}></Textarea>
           </Field>
         </div>
         <Button
