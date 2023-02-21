@@ -34,6 +34,16 @@ const AuthPageStyles = styled.div`
       font-weight: 500;
     }
   }
+  @media screen and (max-width: 767.98px) {
+    .logo {
+      width: 80px;
+      height: 80px;
+    }
+    .heading {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+  }
 `;
 
 const AuthPage = ({ children }) => {

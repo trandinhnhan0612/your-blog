@@ -1,6 +1,5 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import Label from "../../components/label/Label";
 import Input from "../../components/input/Input";
 import Button from "../../components/button/Button";
 import Radio from "../../components/checkbox/Radio";
@@ -28,11 +27,14 @@ import { Field, FieldCheckBox } from "../../components/field";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
-import { async } from "@firebase/util";
+import { Label } from "../../components/label";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const PostUpdate = () => {
   const [params] = useSearchParams();
   const postId = params.get("id");
+  const [content, setContent] = useState("");
   const [selectCategory, setSelectCategory] = useState("");
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -100,8 +102,14 @@ const PostUpdate = () => {
     });
     setSelectCategory(item);
   };
-  const updatePostHandle = (values) => {
-    console.log(values);
+  const updatePostHandle = async (values) => {
+    const docRef = doc(db, "posts", postId);
+    await updateDoc(docRef, {
+      content,
+    });
+    toast.success("Cập nhật bài viết thành công!", {
+      pauseOnHover: false,
+    });
   };
   if (!postId) return null;
   return (
@@ -167,7 +175,14 @@ const PostUpdate = () => {
             )}
           </Field>
         </div>
-        <div className="mb-10">content is here</div>
+        <div className="mb-10">
+          <Field>
+            <Label>Nội dung</Label>
+            <div className="w-full entry-content">
+              <ReactQuill theme="snow" value={content} onChange={setContent} />
+            </div>
+          </Field>
+        </div>
         <div className="form-layout">
           <Field>
             <Label>Bài viết nổi bật</Label>
@@ -212,7 +227,7 @@ const PostUpdate = () => {
           isLoading={loading}
           disabled={loading}
         >
-          Thêm mới
+          Cập nhật
         </Button>
       </form>
     </div>

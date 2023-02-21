@@ -9,6 +9,7 @@ const PostCategoryStyles = styled.div`
   font-size: 14px;
   font-weight: 600;
   max-width: 95px;
+  text-align: center;
   a {
     display: block;
   }
