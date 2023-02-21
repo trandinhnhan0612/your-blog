@@ -9,18 +9,15 @@ import useFirbaseImage from "../../hooks/useFirebaseImage";
 import Toggle from "../../components/toggle/Toggle";
 import { db } from "../../firebase-data/firebase-config";
 import {
-  addDoc,
   collection,
   doc,
   getDoc,
   getDocs,
   query,
-  serverTimestamp,
   updateDoc,
   where,
 } from "firebase/firestore";
 import { Dropdown } from "../../components/dropdown";
-import { useAuth } from "../../contexts/auth-context";
 import { toast } from "react-toastify";
 import DashboardHeading from "../dashboard/DashboardHeading";
 import { Field, FieldCheckBox } from "../../components/field";
@@ -28,15 +25,20 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import { Label } from "../../components/label";
-import ReactQuill from "react-quill";
+import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import ImageUploader from "quill-image-uploader";
+import { useMemo } from "react";
+import { imgbbAPI } from "../../configimage/apiConfig";
+import axios from "axios";
+
+Quill.register("modules/imageUploader", ImageUploader);
 
 const PostUpdate = () => {
   const [params] = useSearchParams();
   const postId = params.get("id");
   const [content, setContent] = useState("");
   const [selectCategory, setSelectCategory] = useState("");
-  const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
   const {
     control,
@@ -45,7 +47,7 @@ const PostUpdate = () => {
     watch,
     reset,
     getValues,
-    formState: { errors },
+    formState: { errors, isValid, isSubmitting },
   } = useForm({
     mode: "onChange",
   });
@@ -73,6 +75,7 @@ const PostUpdate = () => {
       if (docSnapshot.data()) {
         reset(docSnapshot.data());
         setSelectCategory(docSnapshot.data()?.category || "");
+        setContent(docSnapshot.data()?.content || "");
       }
     }
     fetchData();
@@ -103,14 +106,44 @@ const PostUpdate = () => {
     setSelectCategory(item);
   };
   const updatePostHandle = async (values) => {
+    if (!isValid) return;
     const docRef = doc(db, "posts", postId);
     await updateDoc(docRef, {
+      ...values,
       content,
     });
     toast.success("Cập nhật bài viết thành công!", {
       pauseOnHover: false,
     });
   };
+  const modules = useMemo(
+    () => ({
+      toolbar: [
+        ["bold", "italic", "underline", "strike"],
+        ["blockquote"],
+        [{ header: 1 }, { header: 2 }], // custom button values
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        ["link", "image"],
+      ],
+      imageUploader: {
+        upload: async (file) => {
+          const bodyFormData = new FormData();
+          bodyFormData.append("image", file);
+          const response = await axios({
+            method: "post",
+            url: imgbbAPI,
+            data: bodyFormData,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+          return response.data.data.url;
+        },
+      },
+    }),
+    []
+  );
   if (!postId) return null;
   return (
     <div>
@@ -179,7 +212,12 @@ const PostUpdate = () => {
           <Field>
             <Label>Nội dung</Label>
             <div className="w-full entry-content">
-              <ReactQuill theme="snow" value={content} onChange={setContent} />
+              <ReactQuill
+                modules={modules}
+                theme="snow"
+                value={content}
+                onChange={setContent}
+              />
             </div>
           </Field>
         </div>
@@ -224,8 +262,8 @@ const PostUpdate = () => {
         <Button
           type="submit"
           className="mx-auto w-[200px]"
-          isLoading={loading}
-          disabled={loading}
+          isLoading={isSubmitting}
+          disabled={isSubmitting}
         >
           Cập nhật
         </Button>
