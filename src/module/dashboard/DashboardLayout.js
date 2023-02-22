@@ -40,6 +40,7 @@ const DashboardLayoutStyles = styled.div`
 const DashboardLayout = () => {
   const { userInfor } = useAuth();
   if (!userInfor) return <PageNotFound></PageNotFound>;
+  console.log(userInfor);
   return (
     <DashboardLayoutStyles>
       <DashboardHeader></DashboardHeader>

@@ -20,9 +20,10 @@ import { db } from "../../firebase-data/firebase-config";
 import { useNavigate } from "react-router-dom";
 import { ActionDelete, ActionEdit, ActionView } from "../../components/action";
 import Swal from "sweetalert2";
-import { postStatus } from "../../utils/constants";
+import { postStatus, userRole } from "../../utils/constants";
 import LabelStatus from "../../components/label/LabelStatus";
 import { debounce } from "lodash";
+import { useAuth } from "../../contexts/auth-context";
 
 const POST_PER_PAGE = 5;
 
@@ -117,6 +118,8 @@ const PostManage = () => {
       documentSnapshots.docs[documentSnapshots.docs.length - 1];
     setLastDoc(lastVisible);
   };
+  // const { userInfor } = useAuth();
+  // if (userInfor.role !== userRole.ADMIN) return null;
   return (
     <div>
       <DashboardHeading

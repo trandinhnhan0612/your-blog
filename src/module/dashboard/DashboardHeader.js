@@ -1,7 +1,8 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../../components/button/Button";
+import { useAuth } from "../../contexts/auth-context";
 const DashboardHeaderStyles = styled.div`
   background-color: white;
   padding: 20px;
@@ -37,6 +38,7 @@ const DashboardHeaderStyles = styled.div`
 `;
 
 const DashboardHeader = () => {
+  const { userInfor } = useAuth();
   return (
     <DashboardHeaderStyles>
       <NavLink to="/" className="logo">
@@ -47,9 +49,9 @@ const DashboardHeader = () => {
         <Button to="/manage/add-post" className="header-button" height="52px">
           Viết bài mới
         </Button>
-        <NavLink to="/profile" className="header-avatar">
-          <img srcSet="/avatars.jpg 2x" alt="" />
-        </NavLink>
+        <Link to="/profile" className="header-avatar">
+          <img src={userInfor?.avatar} alt="" />
+        </Link>
       </div>
     </DashboardHeaderStyles>
   );
