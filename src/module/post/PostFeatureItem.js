@@ -71,7 +71,7 @@ const PostFeatureItem = ({ data }) => {
             <PostCategory to={category.slug}>{category.name}</PostCategory>
           )}
           <PostMeta
-            to={slugify(user?.fullname || "", { lower: true })} // || "" to case have not is it is not error
+            to={slugify(user?.username || "", { lower: true })} // || "" to case have not is it is not error
             auhthorName={user?.fullname}
             date={formatDate}
           ></PostMeta>

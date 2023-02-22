@@ -142,7 +142,7 @@ const PostDetailPage = () => {
               </PostCategory>
               <h1 className="post-heading">{postInfor.title}</h1>
               <PostMeta
-                to={slugify(postInfor.user?.fullname || "", { lower: true })}
+                to={slugify(postInfor.user?.username || "", { lower: true })}
                 auhthorName={postInfor.user?.fullname}
                 date={formatDate}
               ></PostMeta>
@@ -154,7 +154,7 @@ const PostDetailPage = () => {
             </div>
             <AuthorBox userId={user.id}></AuthorBox>
           </div>
-          <PostRelated categoryId={postInfor?.categoryId}></PostRelated>
+          <PostRelated categoryId={postInfor?.category?.id}></PostRelated>
         </div>
       </Layout>
     </PostDetailPageStyles>

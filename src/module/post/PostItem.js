@@ -47,7 +47,7 @@ const PostItem = ({ data }) => {
         {data.title}
       </PostTitle>
       <PostMeta
-        to={slugify(data.user?.fullname || "", { lower: true })}
+        to={slugify(data.user?.username || "", { lower: true })}
         auhthorName={data.user?.fullname}
         date={formatDate}
       ></PostMeta>
