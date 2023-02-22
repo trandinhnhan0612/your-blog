@@ -31,6 +31,7 @@ import ImageUploader from "quill-image-uploader";
 import { useMemo } from "react";
 import { imgbbAPI } from "../../configimage/apiConfig";
 import axios from "axios";
+import slugify from "slugify";
 
 Quill.register("modules/imageUploader", ImageUploader);
 
@@ -107,9 +108,12 @@ const PostUpdate = () => {
   };
   const updatePostHandle = async (values) => {
     if (!isValid) return;
+    values.status = Number(values.status);
+    values.slug = slugify(values.slug || values.title, { lower: true });
     const docRef = doc(db, "posts", postId);
     await updateDoc(docRef, {
       ...values,
+      image,
       content,
     });
     toast.success("Cập nhật bài viết thành công!", {

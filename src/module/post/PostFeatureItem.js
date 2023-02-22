@@ -50,7 +50,7 @@ const PostFeatureItemStyles = styled.div`
 `;
 
 const PostFeatureItem = ({ data }) => {
-  console.log(data); // check data contains?
+  // console.log(data); // check data contains?
   if (!data || !data.id) return null;
   const date = data?.createdAt?.seconds
     ? new Date(data?.createdAt?.seconds * 1000)
