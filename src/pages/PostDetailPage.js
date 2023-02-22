@@ -1,11 +1,9 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import Layout from "../components/layout/Layout";
-import Heading from "../components/layout/Heading";
 import PostImage from "../module/post/PostImage";
 import PostCategory from "../module/post/PostCategory";
 import PostMeta from "../module/post/PostMeta";
-import PostItem from "../module/post/PostItem";
 import PageNotFound from "../pages/PageNotFound";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
@@ -13,6 +11,8 @@ import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../firebase-data/firebase-config";
 import parse from "html-react-parser";
 import AuthorBox from "../components/author/AuthorBox";
+import PostRelated from "../module/post/PostRelated";
+import slugify from "slugify";
 
 const PostDetailPageStyles = styled.div`
   padding-bottom: 100px;
@@ -116,7 +116,16 @@ const PostDetailPage = () => {
     }
     fetchData();
   }, [slug]);
-  if (!slug || !postInfor.title) return <PageNotFound></PageNotFound>;
+  useEffect(() => {
+    // window.scroll(0, 0); // when click in post related, it will move up
+    document.body.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [slug]); // [slug] when slug change, it will move up
+  const date = postInfor?.createdAt?.seconds
+    ? new Date(postInfor?.createdAt?.seconds * 1000)
+    : new Date();
+  const formatDate = new Date(date).toLocaleDateString("vi-VI");
+  if (!slug) return <PageNotFound></PageNotFound>;
+  if (!postInfor.title) return null;
   const { user } = postInfor; // destructuring
   return (
     <PostDetailPageStyles>
@@ -128,9 +137,15 @@ const PostDetailPage = () => {
               className="post-feature"
             ></PostImage>
             <div className="post-info">
-              <PostCategory>{postInfor.category?.name}</PostCategory>
+              <PostCategory to={postInfor.category?.slug}>
+                {postInfor.category?.name}
+              </PostCategory>
               <h1 className="post-heading">{postInfor.title}</h1>
-              <PostMeta></PostMeta>
+              <PostMeta
+                to={slugify(postInfor.user?.fullname || "", { lower: true })}
+                auhthorName={postInfor.user?.fullname}
+                date={formatDate}
+              ></PostMeta>
             </div>
           </div>
           <div className="post-content">
@@ -139,15 +154,7 @@ const PostDetailPage = () => {
             </div>
             <AuthorBox userId={user.id}></AuthorBox>
           </div>
-          <div className="post-related">
-            <Heading>Bài Viết Liên Quan</Heading>
-            <div className="grid-layout grid-layout--primary">
-              <PostItem></PostItem>
-              <PostItem></PostItem>
-              <PostItem></PostItem>
-              <PostItem></PostItem>
-            </div>
-          </div>
+          <PostRelated categoryId={postInfor?.categoryId}></PostRelated>
         </div>
       </Layout>
     </PostDetailPageStyles>
