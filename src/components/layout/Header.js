@@ -65,6 +65,19 @@ const HeaderStyles = styled.header`
     align-items: center;
     gap: 20px;
   }
+  @media screen and (max-width: 1023.98px) {
+    .logo {
+      max-width: 50px;
+      margin-right: 200px;
+    }
+    .menu,
+    .search {
+      display: none;
+    }
+    .header-button {
+      font-size: 14px;
+    }
+  }
 `;
 // function getLastName(name) {
 //   if (!name) return "User";

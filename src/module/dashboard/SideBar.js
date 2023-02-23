@@ -25,7 +25,10 @@ const SideBarStyles = styled.div`
     }
   }
   @media screen and (max-width: 1023.98px) {
-    display: none;
+    width: 160px;
+    .menu-item {
+      font-size: 12px;
+    }
   }
 `;
 const sidebarLinks = [

@@ -26,7 +26,30 @@ const HomeBannerStyles = styled.div`
     }
     &-desc {
       line-height: 1.75;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
+      font-size: 18px;
+    }
+  }
+  @media screen and (max-width: 1023.98px) {
+    .banner {
+      flex-direction: column;
+      min-height: unset;
+      &-heading {
+        font-size: 30px;
+        margin-bottom: 10px;
+      }
+      &-desc {
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+      &-image {
+        margin-top: 25px;
+      }
+      &-button {
+        font-size: 14px;
+        height: auto;
+        padding: 10px;
+      }
     }
   }
 `;
@@ -39,13 +62,13 @@ const HomeBanner = () => {
           <div className="banner-content">
             <h1 className="banner-heading">Your Blog</h1>
             <p className="banner-desc">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Id, iure
-              autem aperiam aliquam deleniti deserunt obcaecati laudantium
-              facilis ipsum minima nihil voluptatibus maiores molestias sit
-              aspernatur, ea inventore aliquid itaque?
+              Đăng nội dung thể hiện niềm đam mê theo cách của bạn. Nơi lưu giữ
+              các khoảnh khắc và kỉ niệm, nơi chia sẽ các thông tin về kiến
+              thức, học tập, chuyên môn,...Đăng kí ngay để bắt đầu một blogger
+              mới thôi nào!
             </p>
             <Button to="/sign-up" kind="secondary">
-              Get Started
+              Bắt đầu
             </Button>
           </div>
           <div className="banner-image">

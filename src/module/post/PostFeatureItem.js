@@ -47,6 +47,13 @@ const PostFeatureItemStyles = styled.div`
   @media screen and (min-width: 1024px) {
     height: 272px;
   }
+  @media screen and (max-width: 1023.98px) {
+    .post {
+      &-content {
+        padding: 15px;
+      }
+    }
+  }
 `;
 
 const PostFeatureItem = ({ data }) => {
